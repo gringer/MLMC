@@ -16,14 +16,15 @@ dataCats <- unique(govdata.df$Series_title_2);
 ui <- fluidPage(
   
   # Application title
-  titlePanel("GovHack Application"),
+  titlePanel("My Life, My Council"),
   
   sidebarLayout(
     sidebarPanel(
-      selectInput("council",label = "Council",
+      selectInput("council",label = "My Council",
                          choices=councilNames),
+      tag("h3","This is a test"),
       selectInput("cat",
-                  label = "Category", dataCats)
+                  label = "I'm Interested in", dataCats)
     ),
     # Show a plot of the generated distribution
     mainPanel(
