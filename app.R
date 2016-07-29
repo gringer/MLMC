@@ -9,7 +9,7 @@
 
 library(shiny)
 
-govdata.df <- read.csv("/bioinf/govhack/data/govdata/nalafs-jun2015/nalafs-jun2015-tables-csv.csv.gz", stringsAsFactors = FALSE);
+govdata.df <- read.csv("data/nalafs-jun2015-tables-csv.csv.gz", stringsAsFactors = FALSE);
 councilNames <- unique(govdata.df$Series_title_1);
 dataCats <- unique(govdata.df$Series_title_2);
 
