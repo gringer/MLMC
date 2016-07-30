@@ -7,7 +7,8 @@
 #    http://shiny.rstudio.com/
 #
 
-library(shiny)
+library(shiny);
+library(shinyjs);
 
 options(stringsAsFactors = FALSE);
 type.df <- read.csv("data/Local_Authority_Financial_Statistics_Council_Type.csv");
@@ -16,10 +17,11 @@ defs.df <- read.csv("data/Local_Authority_Financial_Statistics_Activity_Definiti
 councilNames <- (type.df$Council);
 dataCats <- (defs.df$Activity);
 
-shinyUI(fluidPage(
-  
-  # Application title
-  titlePanel("My Life, My Council"),
+shinyUI(
+  fluidPage(
+    useShinyjs(),  ## load shiny js library
+    ## Application title
+    titlePanel("My Life, My Council"),
     tabsetPanel(id="tabPanel",
                 ### Select panel ###
                 tabPanel(title="Select", value="select",
@@ -35,4 +37,4 @@ shinyUI(fluidPage(
                          plotOutput("dataPlot"),
                          actionButton("backButton", label="Back"))
     )
-));
+  ));

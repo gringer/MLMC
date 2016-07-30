@@ -48,5 +48,4 @@ shinyServer(function(input, output, session) {
     session$sendCustomMessage(type="setTab","select");
   });
   
-  
   });
