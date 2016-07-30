@@ -25,6 +25,9 @@ shinyUI(fluidPage(
     tabsetPanel(id="tabPanel",
                 
                 ### Select panel ###
+                el <- div(HTML("I like <u>turtles</u>")),
+                        cat(as.character(el)),
+                
                 tabPanel(title="Select", value="select",
                          selectInput("council",label = "My Council",
                                      choices=councilNames, selected = "Wellington City Council"),
