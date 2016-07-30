@@ -21,8 +21,11 @@ shinyServer(function(input, output, session) {
     }
     if(input$dataType == "Last Year"){
       data.sub.df <- subset(govdata.df, (Period == lastYear.val) & (Series_title_2 == input$cat));
+      data.sub.df$order <- order(data.sub.df$Data_value);
+      data.sub.df$col <- ifelse(data.sub.df$Series_title_1 == input$council,"darkGreen","grey");
       data.units <- head(data.sub.df$UNITS,1);
-      barplot(Data_value ~ Period, data=data.sub.df, ylab=data.units, type="l");
+      barplot(data.sub.df$Data_value[data.sub.df$order], horiz = TRUE, las=2,
+              col = data.sub.df$col[data.sub.df$order], xlab=data.units);
     }
   });
   
