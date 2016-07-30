@@ -18,7 +18,7 @@ govdata.df <- subset(govdata.df, !(Series_title_1 %in% excludeCouncilNames));
 councilNames <- unique(govdata.df$Series_title_1);
 dataCats <- unique(govdata.df$Series_title_2);
 
-ui <- fluidPage(
+shinyUI(fluidPage(
   
   # Application title
   titlePanel("My Life, My Council"),
@@ -37,9 +37,20 @@ ui <- fluidPage(
                          actionButton("backButton", label="Back")
                 )
     )
-);
+));
 
-server <- shinyServer(function(input, output, session) {
+library(shiny);
+
+govdata.df <- read.csv("data/nalafs-jun2015-tables-csv.csv.gz", stringsAsFactors = FALSE);
+
+excludeCouncilNames <- (c("Auckland Tourism, Events and Economic Development", "Museums", "Eliminations", "Total (excluding Museums)"));
+
+govdata.df <- subset(govdata.df, !(Series_title_1 %in% excludeCouncilNames));
+
+councilNames <- unique(govdata.df$Series_title_1);
+dataCats <- unique(govdata.df$Series_title_2);
+
+shinyServer(function(input, output, session) {
   
   output$dataPlot <- renderPlot({
     
