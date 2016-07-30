@@ -56,7 +56,8 @@ shinyServer(function(input, output, session) {
     }
     if(input$tabPanel == "view"){
       ## record the data request in a log file
-      logOutput(input, requestID = requestID);
+      ## [disabled for now until I can work out how to log as www-user]
+      #logOutput(input, requestID = requestID);
     }
   });
   
