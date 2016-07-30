@@ -66,22 +66,22 @@ shinyUI(
                 ### View panel ###
                 ## fixed position panel
                 tabPanel(title="View", value="view", class="tabInterface",
-                         tags$div(
-                           tags$h2("My Council"),
-                           uiOutput("viewTopBlurb",inline=TRUE),
-                           tags$h3("About this data"),
-                           uiOutput("viewDataDesc",inline=TRUE),
-                           conditionalPanel(condition="input.dataType=='Last Year'",
-                                            fluidRow(
-                                              column(3,"Sort by:"),
-                                              column(6,selectInput("sortBy", label=NULL, 
-                                                                   choices=c("Lowest to highest"="ascending",
-                                                                             "Highest to lowest"="descending",
-                                                                             "Alphabetical"="alpha"))))
-                           )
-                         ),
+                         tags$h2("My Council"),
+                         uiOutput("viewTopBlurb",inline=TRUE),
+                         tags$h3("About this data"),
+                         uiOutput("viewDataDesc",inline=TRUE),
                          ## less about height, more about position
-                         actionButton("backButton", label="Back"),
+                         fluidRow(column(3,actionButton("backButton", label="Back")),
+                                  column(3,actionButton("emailButton", label="Email Council"))),
+                         tags$br(),
+                         conditionalPanel(condition="input.dataType=='Last Year'",
+                                          fluidRow(
+                                            column(3,"Sort by:"),
+                                            column(6,selectInput("sortBy", label=NULL, 
+                                                                 choices=c("Lowest to highest"="ascending",
+                                                                           "Highest to lowest"="descending",
+                                                                           "Alphabetical"="alpha"))))
+                         ),
                          tags$div(class="plotGraph", height="400px",
                                   plotOutput("dataPlot", height="1500px"))
                          )

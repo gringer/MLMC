@@ -58,7 +58,6 @@ shinyServer(function(input, output, session) {
   output$dataPlot <- renderPlot({
     if(input$dataType == "Over Time"){
       data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat));
-      print(head(data.sub.df));
       #data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat) & 
       #                        (Council.Type != type.df[input$council,"Council.Type"]));
       data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
@@ -68,6 +67,7 @@ shinyServer(function(input, output, session) {
     }
     if(input$dataType == "Last Year"){
       data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat));
+      print(head(data.sub.df));
       #data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat) & 
       #                        Council.Type == type.df[input$council,"Council.Type"]);
       data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
