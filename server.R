@@ -20,15 +20,15 @@ shinyServer(function(input, output, session) {
   output$dataPlot <- renderPlot({
     if(input$dataType == "Over Time"){
       data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat));
-      data.sub.df$pct.exp <- data.sub.df$opex.1000 /
-        total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))];
+      data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
+        total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
       plot(data.sub.df$Year, data.sub.df$pct.exp, ylab="Percent Expenditure",
-           xlab="Year", type="l");
+           xlab="Year", type="b", lwd=2, col="darkgreen");
     }
     if(input$dataType == "Last Year"){
       data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat));
-      data.sub.df$pct.exp <- data.sub.df$opex.1000 /
-        total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))];
+      round(data.sub.df$pct.exp <- data.sub.df$opex.1000 /
+        total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
       data.sub.df$order <- order(data.sub.df$pct.exp);
       data.sub.df$col <- ifelse(data.sub.df$Council == input$council,"darkGreen","grey");
       barplot(data.sub.df$pct.exp[data.sub.df$order], horiz = TRUE, las=2,
@@ -39,13 +39,11 @@ shinyServer(function(input, output, session) {
   
   ## Observers to detect button changes and switch tabs
   observeEvent(input$viewButton,{
-    cat("view\n");
-    session$sendCustomMessage(type="setTab","view");
+    updateTabsetPanel(session, "tabPanel", selected = "view");
     });
   
   observeEvent(input$backButton,{
-    cat("back\n");
-    session$sendCustomMessage(type="setTab","select");
+    updateTabsetPanel(session, "tabPanel", selected = "select");
   });
   
   });
