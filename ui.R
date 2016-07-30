@@ -32,8 +32,15 @@ shinyUI(
     tabsetPanel(id="tabPanel",
                 ### Select panel ###
                 tabPanel(title="Select", value="select",
-                         tags$img(src="mylifemycouncil-bannerimage.png", class="banner"),
-                         tags$h2("Find my council"),
+                         tags$img(src="mylifemycouncil-bannerimage.png", id="banner"),
+                         tags$p("We know that how your money is spent is very important to know but it
+                                can be very difficult to find out if your council is spending your money
+                                on your priorities."),
+                         tags$p("At My Life My Council we have brought together data from councils across
+                                the country to make it easy."),
+                         tags$h3("Find my council"),
+                         tags$p("Select from the options to find out how your council spends money on
+                                what is important to you."),
                          fluidRow(
                            column(3,"My council is:"),
                            column(6,selectInput("council", label=NULL,
@@ -50,7 +57,11 @@ shinyUI(
                                                  choices=c("compare with other councils" = "Last Year",
                                                            "see my council's spending since 2010" = "Over Time")))
                          ),
-                         actionButton("viewButton", label="View")),
+                         fluidRow(
+                           column(3,NULL),
+                           column(9,actionButton("viewButton", label="See your council"))
+                         )
+                ),
                 ### View panel ###
                 ## fixed position panel
                 tabPanel(title="View", value="view",
