@@ -20,13 +20,23 @@ dataCats <- unique(govdata.df$Series_title_2);
 
 shinyUI(fluidPage(
   
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.min.css"),
+    tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
+    tags$script(href = "myScript.js")
+  ),
+  
+  #includeCSS("styles.css"),
+  #includeScript("myScript.js"),
+                  
+  #el <- div(HTML("I like <u>turtles</u>")),
+  #cat(as.character(el)),
+  
   # Application title
   titlePanel("My Life, My Council"),
     tabsetPanel(id="tabPanel",
                 
                 ### Select panel ###
-                el <- div(HTML("I like <u>turtles</u>")),
-                        cat(as.character(el)),
                 
                 tabPanel(title="Select", value="select",
                          selectInput("council",label = "My Council",
@@ -42,4 +52,5 @@ shinyUI(fluidPage(
                          plotOutput("dataPlot"),
                          actionButton("backButton", label="Back"))
     )
+  
 ));
