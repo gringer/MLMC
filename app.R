@@ -28,8 +28,8 @@ ui <- fluidPage(
                               choices=councilNames),
                   selectInput("cat",
                               label = "I'm Interested in", dataCats),
-                  radioButtons("dataType", label = "Data type",
-                                     choices = c("Over Time","Other Councils")),
+                  radioButtons("dataType", label = "I want to see",
+                                     choices = c("Over Time","Last Year")),
                   actionButton("viewButton", label="View")
                 ),
                 tabPanel(title="View", value="view",
@@ -39,20 +39,29 @@ ui <- fluidPage(
     )
 );
 
-server <- shinyServer(function(input, output) {
+server <- shinyServer(function(input, output, session) {
   
   output$dataPlot <- renderPlot({
     
     data.sub.df <- subset(govdata.df, (Series_title_1 == input$council) & (Series_title_2 == input$cat));
     data.units <- head(data.sub.df$UNITS,1);
-    plot(Data_value ~ Period, data=data.sub.df, ylab=data.units);
+    plot(data.sub.df$Period, data.sub.df$Data_value, horiz=TRUE, data=data.sub.df, ylab=data.units);
 
   });
   
   ## Observers to detect button changes and switch tabs
+  observeEvent(input$viewButton,{
+    cat("view\n");
+    session$sendCustomMessage(type="setTab","view");
+    });
+  
+  observeEvent(input$backButton,{
+    cat("back\n");
+    session$sendCustomMessage(type="setTab","select");
+  });
   
   
-});
+  });
 
 
 shinyApp(ui = ui, server = server);
