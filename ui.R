@@ -64,9 +64,9 @@ shinyUI(
                            )
                          ),
                          ## less about height, more about position
+                         actionButton("backButton", label="Back"),
                          tags$div(class="plotGraph", height="400px",
-                                  plotOutput("dataPlot", height="1500px")
-                         ),
-                         actionButton("backButton", label="Back"))
+                                  plotOutput("dataPlot", height="1500px"))
+                         )
     )
   ));
