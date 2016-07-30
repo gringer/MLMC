@@ -31,7 +31,7 @@ shinyUI(
              tabsetPanel(id="tabPanel",
                 ### Select panel ###
                 tabPanel(title="Select", value="select", class="tabInterface",
-                         tags$img(src="mylifemycouncil-bannerimage.png", id="banner"),
+                         tags$img(src="mylifemycouncil-bannerimage.jpg", id="banner"),
                          tags$h3("How does my council spend its money?"),
                          tags$p("We know that how your money is spent is very important to know but it
                                 can be very difficult to find out if your council is spending your money
