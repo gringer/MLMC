@@ -2,6 +2,10 @@
   margin-left: 50px;
 }
 
+#logo{
+  margin-top:10px;
+}
+
 #tabPanel{
   display:none;
 }
