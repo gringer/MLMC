@@ -10,6 +10,11 @@
 library(shiny)
 
 govdata.df <- read.csv("data/nalafs-jun2015-tables-csv.csv.gz", stringsAsFactors = FALSE);
+
+excludeCouncilNames <- (c("Auckland Tourism, Events and Economic Development", "Museums", "Eliminations", "Total (excluding Museums)"));
+
+govdata.df <- subset(govdata.df, !(Series_title_1 %in% excludeCouncilNames));
+
 councilNames <- unique(govdata.df$Series_title_1);
 dataCats <- unique(govdata.df$Series_title_2);
 
@@ -17,20 +22,21 @@ ui <- fluidPage(
   
   # Application title
   titlePanel("My Life, My Council"),
-  
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("council",label = "My Council",
-                         choices=councilNames),
-      tag("h3","This is a test"),
-      selectInput("cat",
-                  label = "I'm Interested in", dataCats)
-    ),
-    # Show a plot of the generated distribution
-    mainPanel(
-       plotOutput("dataPlot")
+    tabsetPanel(id="tabPanel",
+                tabPanel(title="Select", value="select",
+                  selectInput("council",label = "My Council",
+                              choices=councilNames),
+                  selectInput("cat",
+                              label = "I'm Interested in", dataCats),
+                  radioButtons("dataType", label = "Data type",
+                                     choices = c("Over Time","Other Councils")),
+                  actionButton("viewButton", label="View")
+                ),
+                tabPanel(title="View", value="view",
+                         plotOutput("dataPlot"),
+                         actionButton("backButton", label="Back")
+                )
     )
-  )
 );
 
 server <- shinyServer(function(input, output) {
@@ -42,6 +48,9 @@ server <- shinyServer(function(input, output) {
     plot(Data_value ~ Period, data=data.sub.df, ylab=data.units);
 
   });
+  
+  ## Observers to detect button changes and switch tabs
+  
   
 });
 
