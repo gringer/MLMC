@@ -19,6 +19,11 @@ dataCats <- (defs.df$Activity);
 
 shinyUI(
   fluidPage(
+    tags$head(
+      tags$link(rel="stylesheet", type="text/css", href="bootstrap.min.css"),
+      tags$link(rel="stylesheet", type="text/css", href="styles.css"),
+      tags$script(src="myScript.js")
+    ),
     useShinyjs(),  ## load shiny js library
     ## Application title
     titlePanel("My Life, My Council"),

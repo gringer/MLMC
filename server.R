@@ -45,7 +45,7 @@ shinyServer(function(input, output, session) {
     print(input$dataType);
     list("My council is ",tags$b(input$council),
          ", I'm interested in ", tags$b(input$cat),
-         "and I want to ", tags$b(typeFull[input$dataType]), ".");
+         "and I want to ", tags$b(typeFull[input$dataType]));
   });
   
   output$viewDataDesc <- renderUI({
