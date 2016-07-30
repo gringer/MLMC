@@ -42,23 +42,23 @@ shinyUI(
                          tags$p("Select from the options to find out how your council spends money on
                                 what is important to you."),
                          fluidRow(
-                           column(3,"My council is:"),
+                           column(2,"My council is:"),
                            column(6,selectInput("council", label=NULL,
                                                 choices=councilNames,
                                                 selected="Wellington City Council"))
                          ),
                          fluidRow(
-                           column(3,"I'm interested in:"),
+                           column(2,"I'm interested in:"),
                            column(6,selectInput("cat", label=NULL, choices=dataCats))
                          ),
                          fluidRow(
-                           column(3,"I want to:"),
+                           column(2,"I want to:"),
                            column(9,radioButtons("dataType", label=NULL,
                                                  choices=c("compare with other councils for 2015" = "Last Year",
                                                            "see my council's spending since 2010" = "Over Time")))
                          ),
                          fluidRow(
-                           column(3,NULL),
+                           column(2,NULL),
                            column(9,actionButton("viewButton", label="See your council"))
                          )
                 ),
