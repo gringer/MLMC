@@ -25,16 +25,35 @@ shinyUI(
     tabsetPanel(id="tabPanel",
                 ### Select panel ###
                 tabPanel(title="Select", value="select",
-                         selectInput("council",label = "My Council",
-                                     choices=councilNames, selected = "Wellington City Council"),
-                         selectInput("cat",
-                                     label = "I'm Interested in", dataCats),
-                         radioButtons("dataType", label = "I want to see",
-                                      choices = c("Over Time","Last Year")),
+                         tags$h2("Find my council"),
+                         fluidRow(
+                           column(3,"My council is:"),
+                           column(6,selectInput("council", label=NULL,
+                                                choices=councilNames,
+                                                selected="Wellington City Council"))
+                         ),
+                         fluidRow(
+                           column(3,"I'm interested in:"),
+                           column(6,selectInput("cat", label=NULL, choices=dataCats))
+                         ),
+                         fluidRow(
+                           column(3,"I want to:"),
+                           column(9,radioButtons("dataType", label=NULL,
+                                                 choices=c("compare with other councils" = "Last Year",
+                                                           "see my council's spending since 2010" = "Over Time")))
+                         ),
                          actionButton("viewButton", label="View")),
                 ### View panel ###
                 tabPanel(title="View", value="view",
-                         plotOutput("dataPlot"),
+                         tags$h2("My Council"),
+                         uiOutput("viewTopBlurb",inline=TRUE),
+                         tags$h3("About this data"),
+                         uiOutput("viewDataDesc",inline=TRUE),
+                         fluidRow(
+                           column(3,"Sort by:"),
+                           column(6,selectInput("sortBy", label=NULL, choices=c("ascending","descending")))
+                         ),
+                         plotOutput("dataPlot", height="1500px"),
                          actionButton("backButton", label="Back"))
     )
   ));
