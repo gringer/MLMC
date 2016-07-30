@@ -9,14 +9,12 @@
 
 library(shiny)
 
-govdata.df <- read.csv("data/nalafs-jun2015-tables-csv.csv.gz", stringsAsFactors = FALSE);
+options(stringsAsFactors = FALSE);
+type.df <- read.csv("data/Local_Authority_Financial_Statistics_Council_Type.csv");
+defs.df <- read.csv("data/Local_Authority_Financial_Statistics_Activity_Definitions.csv");
 
-excludeCouncilNames <- (c("Auckland Tourism, Events and Economic Development", "Museums", "Eliminations", "Total (excluding Museums)"));
-
-govdata.df <- subset(govdata.df, !(Series_title_1 %in% excludeCouncilNames));
-
-councilNames <- unique(govdata.df$Series_title_1);
-dataCats <- unique(govdata.df$Series_title_2);
+councilNames <- (type.df$Council);
+dataCats <- (defs.df$Activity);
 
 shinyUI(fluidPage(
   
