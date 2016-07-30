@@ -54,7 +54,7 @@ shinyUI(
                            column(6,selectInput("sortBy", label=NULL, choices=c("ascending","descending")))
                          ),
                          ## less about height, more about position
-                         tags$div(style="plotGraph", plotOutput("dataPlot", height="1500px")),
+                         tags$div(class="plotGraph", plotOutput("dataPlot", height="1500px")),
                          actionButton("backButton", label="Back"))
     )
   ));
