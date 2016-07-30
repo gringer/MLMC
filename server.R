@@ -11,8 +11,8 @@ core.df$Council.Type <- type.df$Council.Type[core.df$Council];
 defs.df <- read.csv("data/Local_Authority_Financial_Statistics_Activity_Definitions.csv");
 rownames(defs.df) <- defs.df$Activity;
 
-typeFull <- c("Last Year" = "compare with other councils",
-              "Over Time" = "see my council's spending since 2010");
+typeFull <- c("Last Year" = "compare with other councils.",
+              "Over Time" = "see my council's spending since 2010.");
 
 total.exp <- xtabs(opex.1000 ~ Council + Year, data=core.df);
 
@@ -45,7 +45,7 @@ shinyServer(function(input, output, session) {
     print(input$dataType);
     list("My council is ",tags$b(input$council),
          ", I'm interested in ", tags$b(input$cat),
-         "and I want to ", tags$b(typeFull[input$dataType]));
+         "and I want to ", tags$b(typeFull[input$dataType]), ".");
   });
   
   output$viewDataDesc <- renderUI({
