@@ -12,8 +12,8 @@ total.exp <- xtabs(opex.1000 ~ Council + Year, data=core.df);
 
 lastYear <- 2015;
 
-councilNames <- unique(govdata.df$Series_title_1);
-dataCats <- unique(govdata.df$Series_title_2);
+councilNames <- type.df$Council;
+dataCats <- defs.df$Activity;
 
 shinyServer(function(input, output, session) {
   
