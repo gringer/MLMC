@@ -10,6 +10,11 @@
   display:none;
 }
 
+#footer{
+  margin-top:20px;
+  font-size: 5;
+}
+
 #banner {
   margin-top: 10px;
   margin-bottom: 10px;

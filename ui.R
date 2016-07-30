@@ -20,6 +20,7 @@ dataCats <- (defs.df$Activity);
 shinyUI(
   fluidPage(
     tags$head(
+      tags$title("My Life, My Council"),
       tags$link(rel="stylesheet", type="text/css", href="bootstrap.min.css"),
       tags$link(rel="stylesheet", type="text/css", href="styles.css"),
       tags$script(src="myScript.js")
@@ -27,7 +28,7 @@ shinyUI(
     useShinyjs(),  ## load shiny js library
     ## Application title
     fluidRow(
-    tags$div(id="mainApp", column(1,tags$img(id="logo", src="mylifemycouncil-logo.png"))),
+    tags$div(id="mainApp", fluidRow(column(1,tags$img(id="logo", src="mylifemycouncil-logo.png")))),
              tabsetPanel(id="tabPanel",
                 ### Select panel ###
                 tabPanel(title="Select", value="select", class="tabInterface",
@@ -84,5 +85,7 @@ shinyUI(
                          tags$div(class="plotGraph", height="400px",
                                   plotOutput("dataPlot", height="1500px"))
                          )
-    ))
+    ),
+    tags$p(id="footer", "Powered by RStudio Shiny and Catalyst Cloud"))
   ));
+  

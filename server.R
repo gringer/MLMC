@@ -49,12 +49,16 @@ shinyServer(function(input, output, session) {
   });
   
   output$viewDataDesc <- renderUI({
-    list(defs.df[input$cat,"Definitions"]);
+    list(tags$p(input$council, " is a ", tags$b(type.df[input$council,"Council.Type"]),
+         "council."),
+         tags$p(tags$b(input$cat)," ",
+         defs.df[input$cat,"Definitions"]));
   });
   
   output$dataPlot <- renderPlot({
     if(input$dataType == "Over Time"){
       data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat));
+      print(head(data.sub.df));
       #data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat) & 
       #                        (Council.Type != type.df[input$council,"Council.Type"]));
       data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
@@ -73,7 +77,7 @@ shinyServer(function(input, output, session) {
       data.sub.df$col <- ifelse(data.sub.df$Council == input$council,"darkGreen","grey");
       par(mar=c(5,1,1,1));
       res <- barplot(data.sub.df$pct.exp, horiz = TRUE, las=2,
-              col = data.sub.df$col,
+              col = data.sub.df$col, border=NA,
               xlab="Percent Expenditure");
       text(x=0,y=res,pos=4,labels = data.sub.df$Council, cex=0.8);
     }
