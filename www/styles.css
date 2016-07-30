@@ -1,3 +1,7 @@
+.nav #tabPanel{
+  display:none;
+}
+
 body {
   font-family: 'Lato', sans-serif;
 }

@@ -20,8 +20,8 @@ dataCats <- (defs.df$Activity);
 shinyUI(
   fluidPage(
     tags$head(
-      tags$link(rel="stylesheet", type="text/css", href="bootstrap.min.css"),
-      tags$link(rel="stylesheet", type="text/css", href="styles.css"),
+      tags$link(rel="stylesheet", type="text/css", href="www/bootstrap.min.css"),
+      tags$link(rel="stylesheet", type="text/css", href="www/styles.css"),
       tags$script(src="myScript.js")
     ),
     useShinyjs(),  ## load shiny js library
