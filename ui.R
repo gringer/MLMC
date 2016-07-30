@@ -23,18 +23,18 @@ shinyUI(fluidPage(
   # Application title
   titlePanel("My Life, My Council"),
     tabsetPanel(id="tabPanel",
+                ### Select panel ###
                 tabPanel(title="Select", value="select",
-                  selectInput("council",label = "My Council",
-                              choices=councilNames),
-                  selectInput("cat",
-                              label = "I'm Interested in", dataCats),
-                  radioButtons("dataType", label = "I want to see",
-                                     choices = c("Over Time","Last Year")),
-                  actionButton("viewButton", label="View")
-                ),
+                         selectInput("council",label = "My Council",
+                                     choices=councilNames, selected = "Wellington City Council"),
+                         selectInput("cat",
+                                     label = "I'm Interested in", dataCats),
+                         radioButtons("dataType", label = "I want to see",
+                                      choices = c("Over Time","Last Year")),
+                         actionButton("viewButton", label="View")),
+                ### View panel ###
                 tabPanel(title="View", value="view",
                          plotOutput("dataPlot"),
-                         actionButton("backButton", label="Back")
-                )
+                         actionButton("backButton", label="Back"))
     )
 ));
