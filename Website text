@@ -9,17 +9,14 @@ At My Life My Council we have brought together information from councils across 
 HEADING: Find my council
 Select from the options below to find out how your council spends money on what is important to you.
 
-
-
 Front page
 Information used in this website is from the Local Authority Financial Statistics (LAFS) 30 June 2015 data set provided by Statistics New Zealand, and information on Council by Type and Council Contact Details held by the Department of Internal Affairs. All information is licensed for re-use under the Creative Commons Attribution 4.0 International licence.
 
 Comparison page
-The graph shows how much each council is spending (as a percentage of the councils total operating expenditure) in different areas, compared to other similar councils (councils grouped by: Unitary, Regional, and Territorial authorities).
+The graph shows how much each council is spending on an activity, compared to other similar councils. It's measured as a percentage of the council's total operating expenditure. Councils are grouped into Unitary, Regional, and Territorial authorities, because each of these groups are responsible for different activities.)
 
 My council spending page
-The graph shows how much of an individuals council's spending (as a percentage of total operating expenditure) is being spent in different areas over time.
-
+The graph shows how much your council is spending on an activity over time. It's measured as a percentage of total operating expenditure.
 
 All pages (bottom of page)
 Powered by RStudio Shiny and Catalyst Cloud
