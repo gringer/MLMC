@@ -32,6 +32,7 @@ shinyUI(
     tabsetPanel(id="tabPanel",
                 ### Select panel ###
                 tabPanel(title="Select", value="select",
+                         tags$img(src="mylifemycouncil-bannerimage.png", class="banner"),
                          tags$h2("Find my council"),
                          fluidRow(
                            column(3,"My council is:"),
