@@ -10,12 +10,27 @@ defs.df <- read.csv("data/Local_Authority_Financial_Statistics_Activity_Definiti
 
 total.exp <- xtabs(opex.1000 ~ Council + Year, data=core.df);
 
-lastYear <- 2015;
+lastYear <- max(core.df$Year);
 
 councilNames <- type.df$Council;
 dataCats <- defs.df$Activity;
 
+logOutput <- function(input, requestID){
+  timeStr <- as.character(Sys.time());
+  #cat(file = "accesslog.txt", append=TRUE, sprintf("Output requested on %s:\n", timeStr));
+  for(n in names(input)){
+    if(is.character(input[[n]]) || (is.numeric(input[[n]]) && (length(input[[n]]) == 1))){
+      cat(file = "accesslog.csv",
+          append=TRUE, sprintf("%s,%s,\"%s\",\"%s\"\n",
+                               requestID, timeStr, n,
+                               substring(paste(input[[n]], collapse=";"),1,100)));
+    }
+  }
+}
+
 shinyServer(function(input, output, session) {
+  
+  requestID <- substr(digest(Sys.time()),1,8);
   
   output$dataPlot <- renderPlot({
     if(input$dataType == "Over Time"){
@@ -34,6 +49,10 @@ shinyServer(function(input, output, session) {
       barplot(data.sub.df$pct.exp[data.sub.df$order], horiz = TRUE, las=2,
               col = data.sub.df$col[data.sub.df$order],
               xlab="Percent Expenditure");
+    }
+    if(input$tabPanel == "view"){
+      ## record the data request in a log file
+      logOutput(input, requestID = requestID);
     }
   });
   
