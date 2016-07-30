@@ -26,7 +26,9 @@ shinyUI(
     ),
     useShinyjs(),  ## load shiny js library
     ## Application title
-    titlePanel("My Life, My Council"),
+    fluidRow(
+      column(1,tags$img(src="mylifemycouncil-logo.png"))
+    ),
     tabsetPanel(id="tabPanel",
                 ### Select panel ###
                 tabPanel(title="Select", value="select",
