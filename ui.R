@@ -23,6 +23,7 @@ shinyUI(fluidPage(
   # Application title
   titlePanel("My Life, My Council"),
     tabsetPanel(id="tabPanel",
+                
                 ### Select panel ###
                 tabPanel(title="Select", value="select",
                          selectInput("council",label = "My Council",
@@ -32,6 +33,7 @@ shinyUI(fluidPage(
                          radioButtons("dataType", label = "I want to see",
                                       choices = c("Over Time","Last Year")),
                          actionButton("viewButton", label="View")),
+                
                 ### View panel ###
                 tabPanel(title="View", value="view",
                          plotOutput("dataPlot"),
