@@ -1,3 +1,7 @@
+.tabInterface, #mainApp{
+  margin-left: 50px;
+}
+
 #tabPanel{
   display:none;
 }
@@ -5,6 +9,7 @@
 #banner {
   margin-top: 10px;
   margin-bottom: 10px;
+  margin-left: -40px;
   width: 100%;
 }
 

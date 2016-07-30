@@ -27,11 +27,10 @@ shinyUI(
     useShinyjs(),  ## load shiny js library
     ## Application title
     fluidRow(
-      column(1,tags$img(src="mylifemycouncil-logo.png"))
-    ),
-    tabsetPanel(id="tabPanel",
+    tags$div(id="mainApp", column(1,tags$img(src="mylifemycouncil-logo.png"))),
+             tabsetPanel(id="tabPanel",
                 ### Select panel ###
-                tabPanel(title="Select", value="select",
+                tabPanel(title="Select", value="select", class="tabInterface",
                          tags$img(src="mylifemycouncil-bannerimage.png", id="banner"),
                          tags$h3("How does my council spend its money?"),
                          tags$p("We know that how your money is spent is very important to know but it
@@ -55,7 +54,7 @@ shinyUI(
                          fluidRow(
                            column(3,"I want to:"),
                            column(9,radioButtons("dataType", label=NULL,
-                                                 choices=c("compare with other councils" = "Last Year",
+                                                 choices=c("compare with other councils for 2015" = "Last Year",
                                                            "see my council's spending since 2010" = "Over Time")))
                          ),
                          fluidRow(
@@ -65,15 +64,19 @@ shinyUI(
                 ),
                 ### View panel ###
                 ## fixed position panel
-                tabPanel(title="View", value="view",
+                tabPanel(title="View", value="view", class="tabInterface",
                          tags$div(
                            tags$h2("My Council"),
                            uiOutput("viewTopBlurb",inline=TRUE),
                            tags$h3("About this data"),
                            uiOutput("viewDataDesc",inline=TRUE),
-                           fluidRow(
-                             column(3,"Sort by:"),
-                             column(6,selectInput("sortBy", label=NULL, choices=c("ascending","descending")))
+                           conditionalPanel(condition="input.dataType=='Last Year'",
+                                            fluidRow(
+                                              column(3,"Sort by:"),
+                                              column(6,selectInput("sortBy", label=NULL, 
+                                                                   choices=c("Lowest to highest"="ascending",
+                                                                             "Highest to lowest"="descending",
+                                                                             "Alphabetical"="alpha"))))
                            )
                          ),
                          ## less about height, more about position
@@ -81,5 +84,5 @@ shinyUI(
                          tags$div(class="plotGraph", height="400px",
                                   plotOutput("dataPlot", height="1500px"))
                          )
-    )
+    ))
   ));
