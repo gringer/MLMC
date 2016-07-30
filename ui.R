@@ -44,17 +44,22 @@ shinyUI(
                          ),
                          actionButton("viewButton", label="View")),
                 ### View panel ###
+                ## fixed position panel
                 tabPanel(title="View", value="view",
-                         tags$h2("My Council"),
-                         uiOutput("viewTopBlurb",inline=TRUE),
-                         tags$h3("About this data"),
-                         uiOutput("viewDataDesc",inline=TRUE),
-                         fluidRow(
-                           column(3,"Sort by:"),
-                           column(6,selectInput("sortBy", label=NULL, choices=c("ascending","descending")))
+                         tags$div(
+                           tags$h2("My Council"),
+                           uiOutput("viewTopBlurb",inline=TRUE),
+                           tags$h3("About this data"),
+                           uiOutput("viewDataDesc",inline=TRUE),
+                           fluidRow(
+                             column(3,"Sort by:"),
+                             column(6,selectInput("sortBy", label=NULL, choices=c("ascending","descending")))
+                           )
                          ),
                          ## less about height, more about position
-                         tags$div(class="plotGraph", plotOutput("dataPlot", height="1500px")),
+                         tags$div(class="plotGraph", height="400px",
+                                  plotOutput("dataPlot", height="1500px")
+                         ),
                          actionButton("backButton", label="Back"))
     )
   ));
