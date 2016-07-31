@@ -118,7 +118,6 @@ shinyServer(function(input, output, session) {
   output$comparisonPlot <- renderPlot({
     councilType <- type.df[input$council,"Council.Type"];
     typeCount <- sum(type.df$Council.Type == councilType);
-    #data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat));
     data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat) & 
                             Council.Type == councilType);
     data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
@@ -138,7 +137,7 @@ shinyServer(function(input, output, session) {
     dataMax <- max(data.sub.df$pct.exp);
     res <- barplot(c(data.sub.df$pct.exp,0,council.value),
                    names.arg=c(data.sub.df$Council,"",input$council), 
-                   horiz=TRUE, las=2, xlim=c(0,dataMax*1.0), yaxs="i",
+                   horiz=TRUE, las=2, yaxs="i",
                    col=c(data.sub.df$col,NA,"#23723F"),
                    border=NA, xaxt="n");
     abline(h=head(tail(res,2),1),lty="dotted", lwd=3);
@@ -156,10 +155,44 @@ shinyServer(function(input, output, session) {
   
   output$makePDF <- downloadHandler(
     filename = function(){
-      paste(input$council,input$cat,input$dataType,Sys.Date(),".pdf",sep="_");
+      gsub(" ","_",sprintf("%s_%s_%s_%s.pdf",input$council,input$cat,
+              input$dataType,format(Sys.Date(),"%Y-%b-%d")));
     },
     content = function(con){
-      pdf(con);
+      pdf(con, paper="a4r", width=11, height=8);
+      councilType <- type.df[input$council,"Council.Type"];
+      typeCount <- sum(type.df$Council.Type == councilType);
+      ## bar plot -- expenses compared to other councils
+      data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat) & 
+                              Council.Type == councilType);
+      data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
+                                     total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
+      council.value <- subset(data.sub.df, Council == input$council)$pct.exp;
+      data.sub.df$order <- order(data.sub.df$pct.exp);
+      data.sub.df <- data.sub.df[data.sub.df$order,];
+      data.sub.df$col <- ifelse(c(data.sub.df$Council == input$council),"#23723F","#90DDAB");
+      par(mar=c(0,10,5,2));
+      dataMax <- max(data.sub.df$pct.exp);
+      res <- barplot(c(data.sub.df$pct.exp,0,council.value),
+                     names.arg=c(data.sub.df$Council,"",input$council), 
+                     horiz=TRUE, las=2, cex.names=0.5,
+                     col=c(data.sub.df$col,NA,"#23723F"),
+                     border=NA, xaxt="n", main=input$cat);
+      text(x=c(data.sub.df$pct.exp,NA,council.value), y=res, pos=4, 
+           labels=c(data.sub.df$pct.exp,NA,council.value), cex=0.5,
+           col=c(data.sub.df$col,NA,"#23723F"), xpd=TRUE);
+      mtext("Percent Expenditure",3,1);
+      mtext(sprintf("(vs other %s authorities)", tolower(councilType)),3,0.5, cex=0.5);
+      abline(h=head(tail(res,2),1),lty="dotted", lwd=3);
+      ## line graph -- expenses over time
+      data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat));
+      data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
+                                     total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
+      par(mar=c(5, 4, 4, 2) + 0.1); # reset mar to default
+      plot(data.sub.df$Year, data.sub.df$pct.exp,
+           ylab=sprintf("Percent Expenditure"), main=input$cat,
+           xlab="Year", type="b", lwd=2, col="darkgreen");
+      mtext(input$council, 3, 0.5, cex=0.75);
       dummy <- dev.off();
     },
     contentType = "text/pdf"
