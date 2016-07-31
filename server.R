@@ -114,6 +114,7 @@ shinyServer(function(input, output, session) {
                             Council.Type == councilType);
     data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
                                    total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
+    council.value <- subset(data.sub.df, Council == input$council)$pct.exp;
     print(input$sortBy);
     data.sub.df$order <- 
       if(input$sortBy == "descending") {
@@ -125,13 +126,16 @@ shinyServer(function(input, output, session) {
       }
     print(head(data.sub.df));
     data.sub.df <- data.sub.df[data.sub.df$order,];
-    data.sub.df$col <- ifelse(data.sub.df$Council == input$council,"#23723F","#90DDAB");
+    data.sub.df$col <- ifelse(c(data.sub.df$Council == input$council),"#23723F","#90DDAB");
     par(mar=c(0,20,0,1));
     dataMax <- max(data.sub.df$pct.exp);
-    res <- barplot(data.sub.df$pct.exp, names.arg=data.sub.df$Council, horiz = TRUE, las=2,
-                   xlim=c(0,dataMax*1.1), col=data.sub.df$col, border=NA, xaxt="n");
-    text(x=data.sub.df$pct.exp, y=res, pos=4, labels=data.sub.df$pct.exp, cex=0.8,
-         col=data.sub.df$col);
+    res <- barplot(c(data.sub.df$pct.exp,0,council.value),
+                   names.arg=c(data.sub.df$Council,"",input$council), 
+                   horiz = TRUE, las=2,
+                   xlim=c(0,dataMax*1.1), col=c(data.sub.df$col,NA,"#23723F"), border=NA, xaxt="n");
+    text(x=c(data.sub.df$pct.exp,NA,council.value), y=res, pos=4, 
+         labels=c(data.sub.df$pct.exp,NA,council.value), cex=0.8,
+         col=c(data.sub.df$col,NA,"#23723F"));
     mtext(sprintf("Percent Expenditure (vs other %s authorities)", tolower(councilType)),
           3, line = 3, cex=2);
     if(input$tabPanel == "view"){
