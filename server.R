@@ -143,6 +143,17 @@ shinyServer(function(input, output, session) {
       #logOutput(input, requestID = requestID);
     }
   });
+  
+  output$makePDF <- downloadHandler(
+    filename = function(){
+      paste(input$council,input$cat,input$dataType,Sys.Date(),".pdf",sep="_");
+    },
+    content = function(con){
+      pdf(con);
+      dummy <- dev.off();
+    },
+    contentType = "text/pdf"
+  );
 
   ## Observers to detect button changes and switch tabs
   observeEvent(input$viewButton,{

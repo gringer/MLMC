@@ -27,7 +27,6 @@ shinyUI(
     ),
     useShinyjs(),  ## load shiny js library
     ## Application title
-    fluidRow(
     tags$div(id="mainApp", 
              fluidRow(column(1,tags$img(id="logo", src="mylifemycouncil-logo.png"))),
                       #column(6,NULL),
@@ -36,7 +35,7 @@ shinyUI(
              tabsetPanel(id="tabPanel",
                 ### Select panel ###
                 tabPanel(title="Select", value="select", class="tabInterface",
-                         tags$img(src="mylifemycouncil-bannerimage.jpg", id="banner"),
+                         tags$div(id="bannerDiv",tags$img(src="mylifemycouncil-bannerimage.jpg", id="banner")),
                          tags$h3("How does my council spend my money?"),
                          tags$p("We know that how your money is spent is important to you."),
                          tags$p("At My Life My Council we have brought together information from councils across the country to show you where your money is going."),
@@ -81,7 +80,7 @@ shinyUI(
                          ## less about height, more about position
                          fluidRow(column(3,actionButton("backButton", label="Back")),
                                   column(6,NULL),
-                                  column(3,actionButton("pdfButton", label="Make PDF"))),
+                                  column(3,downloadButton("makePDF", label="Make PDF"))),
                          tags$br(),
                          conditionalPanel(condition="input.dataType=='Last Year'",
                                           fluidRow(
@@ -109,14 +108,15 @@ shinyUI(
                                   tags$h3("Contact Details"),
                                   uiOutput("contactDetails",inline=TRUE)
                          )
-                )
-             ),
+                ) # closes "view" tabPanel
+             ), # closes tabSetPanel
              tags$br(),
              tags$br(),
              tags$div(id="bottomBorder", style="background-color: #23723F"),
              tags$p(id="footer", "Powered by RStudio",tags$sup("®"),
                     " Shiny and Catalyst Cloud. See ",
                     tags$a(href="https://github.com/gringer/MLMC","here"),
-                    "for the code used to make this website."))
-    )
-  ));
+                    "for the code used to make this website.")
+    ) # closes mainApp div
+  ) # closes fluidPage
+);
