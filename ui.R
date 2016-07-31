@@ -113,8 +113,12 @@ shinyUI(
              tags$br(),
              tags$br(),
              tags$div(id="bottomBorder", style="background-color: #23723F"),
-             tags$p(id="footer", "Powered by RStudio",tags$sup("®"),
-                    " Shiny and Catalyst Cloud. See ",
+             tags$p(id="footer", "Powered by ",
+                    tags$a(href="https://www.rstudio.com/products/shiny/",
+                           "RStudio",tags$sup("®")," Shiny")," and ",
+                    tags$a(href="http://www.catalyst.net.nz/catalyst-cloud",
+                           "Catalyst Cloud."),
+                    " See ",
                     tags$a(href="https://github.com/gringer/MLMC","here"),
                     "for the code used to make this website.")
     ) # closes mainApp div
