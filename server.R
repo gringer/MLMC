@@ -110,4 +110,9 @@ shinyServer(function(input, output, session) {
     updateTabsetPanel(session, "tabPanel", selected = "select");
   });
   
+  observeEvent(input$council,{
+    typeCount <- sum(type.df$Council.Type == type.df[input$council,"Council.Type"]);
+    print(typeCount);
+    });
+  
   });
