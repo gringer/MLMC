@@ -104,11 +104,13 @@ shinyServer(function(input, output, session) {
       }
     print(head(data.sub.df));
     data.sub.df <- data.sub.df[data.sub.df$order,];
-    data.sub.df$col <- ifelse(data.sub.df$Council == input$council,"darkGreen","grey");
-    par(mar=c(1,1,5,1));
-    res <- barplot(data.sub.df$pct.exp, horiz = TRUE, las=2,
-                   col = data.sub.df$col, border=NA, xaxt="n");
-    text(x=0,y=res,pos=4,labels = data.sub.df$Council, cex=0.8);
+    data.sub.df$col <- ifelse(data.sub.df$Council == input$council,"#23723F","#90DDAB");
+    par(mar=c(1,16,5,1));
+    dataMax <- max(data.sub.df$pct.exp);
+    res <- barplot(data.sub.df$pct.exp, names.arg=data.sub.df$Council, horiz = TRUE, las=2,
+                   xlim=c(0,dataMax*1.1), col=data.sub.df$col, border=NA, xaxt="n");
+    text(x=data.sub.df$pct.exp, y=res, pos=4, labels=data.sub.df$pct.exp, cex=0.8,
+         col=data.sub.df$col);
     axis(3);
     mtext(sprintf("Percent Expenditure (vs other %s authorities)", tolower(councilType)),
           3, line = 3, cex=2);
