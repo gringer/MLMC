@@ -13,6 +13,9 @@ rownames(defs.df) <- defs.df$Activity;
 contacts.df <- read.csv("data/NZ_Councils_Contact_List.csv");
 rownames(contacts.df) <- contacts.df$Council;
 
+values <- reactiveValues();
+values$barPlotHeight <- 400;
+
 typeFull <- c("Last Year" = "compare with other councils.",
               "Over Time" = "see my council's spending since 2010.");
 
@@ -101,14 +104,20 @@ shinyServer(function(input, output, session) {
     data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
                                    total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
     dataMax <- max(data.sub.df$pct.exp);
-    par(mar=c(1,20,5,1));
-    res <- barplot(NA, horiz=TRUE, las=2, xlim=c(0,dataMax*1.1),
-                   ylim=c(0,1), axes=FALSE, ann=FALSE);
+    par(mar=c(0,20,4,2));
+    res <- barplot(NA, horiz=TRUE, las=2, xlim=c(0,dataMax*1.1), yaxs="i", xaxt="n");
     axis(3);
   });
   
+  output$dynamicCompPlot <- 
+    renderUI(tags$div(style=sprintf("height: %dpx; width: 100%%; overflow: auto;",
+                                    min(values$barPlotHeight,250)),
+                      plotOutput("comparisonPlot", width="100%", 
+                                 height=sprintf("%dpx",values$barPlotHeight))));
+  
   output$comparisonPlot <- renderPlot({
     councilType <- type.df[input$council,"Council.Type"];
+    typeCount <- sum(type.df$Council.Type == councilType);
     #data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat));
     data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat) & 
                             Council.Type == councilType);
@@ -125,16 +134,17 @@ shinyServer(function(input, output, session) {
       }
     data.sub.df <- data.sub.df[data.sub.df$order,];
     data.sub.df$col <- ifelse(c(data.sub.df$Council == input$council),"#23723F","#90DDAB");
-    par(mar=c(0,20,0,1));
+    par(mar=c(0,20,0,2));
     dataMax <- max(data.sub.df$pct.exp);
     res <- barplot(c(data.sub.df$pct.exp,0,council.value),
                    names.arg=c(data.sub.df$Council,"",input$council), 
-                   horiz = TRUE, las=2,
-                   xlim=c(0,dataMax*1.1), col=c(data.sub.df$col,NA,"#23723F"), border=NA, xaxt="n");
+                   horiz=TRUE, las=2, xlim=c(0,dataMax*1.0), yaxs="i",
+                   col=c(data.sub.df$col,NA,"#23723F"),
+                   border=NA, xaxt="n");
     abline(h=head(tail(res,2),1),lty="dotted", lwd=3);
     text(x=c(data.sub.df$pct.exp,NA,council.value), y=res, pos=4, 
          labels=c(data.sub.df$pct.exp,NA,council.value), cex=0.8,
-         col=c(data.sub.df$col,NA,"#23723F"));
+         col=c(data.sub.df$col,NA,"#23723F"), xpd=TRUE);
     mtext(sprintf("Percent Expenditure (vs other %s authorities)", tolower(councilType)),
           3, line = 3, cex=2);
     if(input$tabPanel == "view"){
@@ -165,7 +175,8 @@ shinyServer(function(input, output, session) {
   });
   
   observeEvent(input$council,{
-    typeCount <- sum(type.df$Council.Type == type.df[input$council,"Council.Type"]);
+    values$typeCount <- sum(type.df$Council.Type == type.df[input$council,"Council.Type"]);
+    values$barPlotHeight <- values$typeCount * 25;
     });
   
   });

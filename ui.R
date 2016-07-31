@@ -50,7 +50,7 @@ shinyUI(
                          ),
                          fluidRow(
                            column(2,"I'm interested in:"),
-                           column(6,selectInput("cat", label=NULL, choices=dataCats))
+                           column(6,selectInput("cat", label=NULL, choices=dataCats, selected=sample(dataCats,1)))
                          ),
                          fluidRow(
                            column(2,"I want to:"),
@@ -93,8 +93,8 @@ shinyUI(
                          tags$div(class="plotGraph", height="400px",
                                   conditionalPanel(condition="input.dataType=='Last Year'",
                                                    uiOutput("plotHeading"),
-                                                   plotOutput("plotScaleBar", width="95%", height="100px"),
-                                                   tags$div(style="height: 400px; width: 95%; overflow: auto;",plotOutput("comparisonPlot", width="90%", height="1500px")),
+                                                   tags$div(id="scaleBarDiv", plotOutput("plotScaleBar", width="100%", height="75px")),
+                                                   uiOutput("dynamicCompPlot"),
                                                    tags$br(),
                                                    tags$p(tags$b("Description:")," The graph shows how much each council is spending on an activity,
                                                           compared to other similar councils. It's measured as a percentage of the council's total

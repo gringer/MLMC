@@ -20,7 +20,11 @@
 }
 
 #bannerDiv {
-  margin: 10px 0px 10px -50px; /* top right bottom left */
+  margin: 10px 0 10px -50px; /* top right bottom left */
+}
+
+#scaleBarDiv {
+  margin-right: 15px; /* hack to account for scroll bar */
 }
 
 body {
