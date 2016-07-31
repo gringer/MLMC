@@ -79,7 +79,8 @@ shinyServer(function(input, output, session) {
          "Authority."),
          tags$p(tags$b(input$cat)," ",
          defs.df[input$cat,"Basic.definition."],
-         tags$p("See ",tags$a(href="http://datainfoplus.stats.govt.nz/Item/nz.govt.stats/319be03d-287d-4384-993a-d38ef9acb3e6#/nz.govt.stats/6b459c66-0e05-4aa7-997e-d4a5e40941dd","here"),
+         tags$p("See ",tags$a(href="http://datainfoplus.stats.govt.nz/Item/nz.govt.stats/319be03d-287d-4384-993a-d38ef9acb3e6#/nz.govt.stats/6b459c66-0e05-4aa7-997e-d4a5e40941dd","Statistics New Zealand"),
+                " and ",tags$a(href="http://www.localcouncils.govt.nz/lgip.nsf/wpg_url/About-Local-Government-Index","Internal Affairs"),
                 " for more information.")));
   });
   

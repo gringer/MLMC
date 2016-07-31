@@ -65,8 +65,9 @@ shinyUI(
                          tags$br(),
                          tags$br(),
                          fluidRow(
-                           column(9,tags$p("Description: Information used in this website is from the Local Authority
-                                          Financial Statistics (LAFS) 30 June 2015 data set provided by Statistics New Zealand,
+                           column(9,tags$p("Description: Information used in this website is from the ",
+                                           tags$a(href="http://www.stats.govt.nz/tools_and_services/releases_csv_files/csv-files-for-infoshare.aspx",
+                                                  "Local Authority Financial Statistics (LAFS)")," 30 June 2015 data set provided by Statistics New Zealand,
                                           and information on Council by Type and Council Contact Details held by the Department of Internal Affairs.
                                           All information is licensed for re-use under the Creative Commons Attribution 4.0 International licence.", id="smallerfont")))
                          ),
