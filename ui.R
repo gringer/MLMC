@@ -108,5 +108,5 @@ shinyUI(
     tags$br(),
     tags$br(),
     tags$div(id="bottomBorder", style="background-color: #23723F"),
-    tags$p(id="footer", "Powered by RStudio Shiny and Catalyst Cloud"))
+    tags$p(id="footer", "Powered by RStudio",tags$sup("®"), " Shiny and Catalyst Cloud. See ",tags$a(href="https://github.com/gringer/MLMC","here"),"for the code used to make this website."))
   ));
