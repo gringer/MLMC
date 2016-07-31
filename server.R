@@ -51,7 +51,9 @@ shinyServer(function(input, output, session) {
     list(tags$p(input$council, " is a ", tags$b(type.df[input$council,"Council.Type"]),
          "council."),
          tags$p(tags$b(input$cat)," ",
-         defs.df[input$cat,"Basic.definition."]));
+         defs.df[input$cat,"Basic.definition."],
+         tags$p("See ",tags$a(href="http://datainfoplus.stats.govt.nz/Item/nz.govt.stats/319be03d-287d-4384-993a-d38ef9acb3e6#/nz.govt.stats/6b459c66-0e05-4aa7-997e-d4a5e40941dd","here"),
+                " for more information.")));
   });
   
   output$yearPlot <- renderPlot({
