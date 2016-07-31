@@ -101,7 +101,7 @@ shinyServer(function(input, output, session) {
     data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
                                    total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
     dataMax <- max(data.sub.df$pct.exp);
-    par(mar=c(1,16,5,1));
+    par(mar=c(1,20,5,1));
     res <- barplot(NA, horiz=TRUE, las=2, xlim=c(0,dataMax*1.1),
                    ylim=c(0,1), axes=FALSE, ann=FALSE);
     axis(3);
@@ -126,7 +126,7 @@ shinyServer(function(input, output, session) {
     print(head(data.sub.df));
     data.sub.df <- data.sub.df[data.sub.df$order,];
     data.sub.df$col <- ifelse(data.sub.df$Council == input$council,"#23723F","#90DDAB");
-    par(mar=c(0,16,0,1));
+    par(mar=c(0,20,0,1));
     dataMax <- max(data.sub.df$pct.exp);
     res <- barplot(data.sub.df$pct.exp, names.arg=data.sub.df$Council, horiz = TRUE, las=2,
                    xlim=c(0,dataMax*1.1), col=data.sub.df$col, border=NA, xaxt="n");
