@@ -49,7 +49,7 @@ shinyServer(function(input, output, session) {
   
   output$viewDataDesc <- renderUI({
     list(tags$p(input$council, " is a ", tags$b(type.df[input$council,"Council.Type"]),
-         "council."),
+         "Authority."),
          tags$p(tags$b(input$cat)," ",
          defs.df[input$cat,"Basic.definition."],
          tags$p("See ",tags$a(href="http://datainfoplus.stats.govt.nz/Item/nz.govt.stats/319be03d-287d-4384-993a-d38ef9acb3e6#/nz.govt.stats/6b459c66-0e05-4aa7-997e-d4a5e40941dd","here"),
@@ -94,7 +94,7 @@ shinyServer(function(input, output, session) {
                    col = data.sub.df$col, border=NA, xaxt="n");
     text(x=0,y=res,pos=4,labels = data.sub.df$Council, cex=0.8);
     axis(3);
-    mtext(sprintf("Percent Expenditure (vs other %s councils)", tolower(councilType)),
+    mtext(sprintf("Percent Expenditure (vs other %s authorities)", tolower(councilType)),
           3, line = 3, cex=2);
     if(input$tabPanel == "view"){
       ## record the data request in a log file
