@@ -6,6 +6,7 @@ core.df <- read.csv("data/Local_Authority_Financial_Statistics_Year_ended_June_2
 ## rename last column to something a bit easier to write in code
 colnames(core.df)[4] <- "opex.1000";
 caveats.df <- read.csv("data/Local_Authority_Financial_Statistics_Caveats.csv");
+rownames(caveats.df) <- caveats.df$Council;
 type.df <- read.csv("data/Local_Authority_Financial_Statistics_Council_Type.csv", row.names=1);
 core.df$Council.Type <- type.df[core.df$Council,"Council.Type"];
 defs.df <- read.csv("data/Local_Authority_Financial_Statistics_Activity_Definitions.csv");
@@ -64,6 +65,12 @@ shinyServer(function(input, output, session) {
                                tolower(councilType)), style="margin-bottom:-25px")));
   });
 
+  output$dataCaveats <- renderUI({
+    if(input$council %in% rownames(caveats.df)){
+      fluidRow(column(9,tags$b("Note:"), caveats.df[input$council,"Caveats"]));
+    }
+  });
+  
   output$contactDetails <- renderUI({
     fluidPage(
       fluidRow(column(2,tags$b("Authority:")), column(5,input$council)),

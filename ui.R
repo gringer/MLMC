@@ -107,6 +107,7 @@ shinyUI(
                                                    tags$br(),
                                                    tags$p(tags$b("Description:")," The graph shows how much your council is spending on an activity over time.
                                                           It's measured as a percentage of total operating expenditure.")),
+                                  uiOutput("dataCaveats"),
                                   tags$h3("Contact Details"),
                                   uiOutput("contactDetails",inline=TRUE)
                          )
