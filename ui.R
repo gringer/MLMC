@@ -85,7 +85,7 @@ shinyUI(
                          ),
                          tags$div(class="plotGraph",
                                   conditionalPanel(condition="input.dataType=='Last Year'",
-                                                   plotOutput("comparisonPlot", width="90%", height="1500px")),
+                                                   tags$div(style="height: 400px; overflow: auto;",plotOutput("comparisonPlot", width="90%", height="1500px"))),
                                   conditionalPanel(condition="input.dataType=='Over Time'",
                                                    plotOutput("yearPlot", width="90%"))
                          ))
