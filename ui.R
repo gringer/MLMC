@@ -87,13 +87,19 @@ shinyUI(
                                                                            "Highest to lowest"="descending",
                                                                            "Alphabetical"="alpha"))))
                          ),
-                         tags$div(class="plotGraph",
+                         tags$div(class="plotGraph", height="400px",
                                   conditionalPanel(condition="input.dataType=='Last Year'",
-                                                   tags$div(style="height: 400px; width: 95%; overflow: auto;",plotOutput("comparisonPlot", width="90%", height="1500px"))),
+                                                   tags$div(style="height: 400px; width: 95%; overflow: auto;",plotOutput("comparisonPlot", width="90%", height="1500px")),
+                                                   tags$p("Description: The graph shows how much each council is spending on an activity,
+                                                          compared to other similar councils. It's measured as a percentage of the council's total
+                                                          operating expenditure. Councils are grouped into Unitary, Regional, and Territorial authorities,
+                                                          because each of these groups are responsible for different activities.")),
                                   conditionalPanel(condition="input.dataType=='Over Time'",
-                                                   plotOutput("yearPlot", width="90%"))
-                         ))
-    ),
+                                                    plotOutput("yearPlot", height="400px", width="80%"),
+                                                    tags$p("Description: The graph shows how much your council is spending on an activity over time.
+                                                          It's measured as a percentage of total operating expenditure.")))
+                         )
+             ),
     tags$br(),
     tags$br(),
     tags$div(id="bottomBorder", style="background-color: #23723F"),

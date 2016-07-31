@@ -70,6 +70,6 @@ button {
 #bottomBorder {
   background-color: #23723F;
   padding: 10px;
-  margin-left: -40px;
+  /*margin-left: -40px; */
   width: 100%;
 }
