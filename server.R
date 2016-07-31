@@ -116,9 +116,9 @@ shinyServer(function(input, output, session) {
                                    total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
     print(input$sortBy);
     data.sub.df$order <- 
-      if(input$sortBy == "ascending") {
+      if(input$sortBy == "descending") {
         order(data.sub.df$pct.exp);
-      } else if(input$sortBy == "descending"){
+      } else if(input$sortBy == "ascending"){
         order(-data.sub.df$pct.exp);
       } else if(input$sortBy == "alpha"){
         order(-xtfrm(data.sub.df$Council));
