@@ -203,7 +203,7 @@ shinyServer(function(input, output, session) {
     updateTabsetPanel(session, "tabPanel", selected = "view");
     });
   
-  observeEvent(input$backButton,{
+  observeEvent(input$backButton+input$logoLink,{
     updateTabsetPanel(session, "tabPanel", selected = "select");
   });
   

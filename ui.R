@@ -28,7 +28,7 @@ shinyUI(
     useShinyjs(),  ## load shiny js library
     ## Application title
     tags$div(id="mainApp", 
-             fluidRow(column(1,tags$img(id="logo", src="mylifemycouncil-logo.png"))),
+             fluidRow(column(1,actionLink("logoLink", tags$img(id="logo", src="mylifemycouncil-logo.png")))),
                       #column(6,NULL),
                       #column(5,tags$iframe(width=560, height=315, src="https://www.youtube.com/embed/yTgZVVHJMlw",
                       #                  frameborder=0))),
