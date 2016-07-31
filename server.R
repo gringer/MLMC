@@ -51,7 +51,7 @@ shinyServer(function(input, output, session) {
     list(tags$p(input$council, " is a ", tags$b(type.df[input$council,"Council.Type"]),
          "council."),
          tags$p(tags$b(input$cat)," ",
-         defs.df[input$cat,"Definitions"]));
+         defs.df[input$cat,"Basic.definition."]));
   });
   
   output$yearPlot <- renderPlot({
