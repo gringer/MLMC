@@ -10,6 +10,7 @@ type.df <- read.csv("data/Local_Authority_Financial_Statistics_Council_Type.csv"
 core.df$Council.Type <- type.df[core.df$Council,"Council.Type"];
 defs.df <- read.csv("data/Local_Authority_Financial_Statistics_Activity_Definitions.csv");
 rownames(defs.df) <- defs.df$Activity;
+contacts.df <- read.csv("data/NZ_Councils_Contact_List.csv");
 
 typeFull <- c("Last Year" = "compare with other councils.",
               "Over Time" = "see my council's spending since 2010.");
