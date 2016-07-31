@@ -133,6 +133,7 @@ shinyServer(function(input, output, session) {
                    names.arg=c(data.sub.df$Council,"",input$council), 
                    horiz = TRUE, las=2,
                    xlim=c(0,dataMax*1.1), col=c(data.sub.df$col,NA,"#23723F"), border=NA, xaxt="n");
+    abline(h=head(tail(res,2),1),lty="dotted");
     text(x=c(data.sub.df$pct.exp,NA,council.value), y=res, pos=4, 
          labels=c(data.sub.df$pct.exp,NA,council.value), cex=0.8,
          col=c(data.sub.df$col,NA,"#23723F"));
