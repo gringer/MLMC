@@ -82,7 +82,7 @@ shinyUI(
                          conditionalPanel(condition="input.dataType=='Last Year'",
                                           fluidRow(
                                             column(3,"Sort by:"),
-                                            column(6,selectInput("sortBy", label=NULL, 
+                                            column(6,selectInput("sortBy", label=NULL, selected = "descending",
                                                                  choices=c("Lowest to highest"="ascending",
                                                                            "Highest to lowest"="descending",
                                                                            "Alphabetical"="alpha"))))
