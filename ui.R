@@ -72,7 +72,8 @@ shinyUI(
                          uiOutput("viewDataDesc",inline=TRUE),
                          ## less about height, more about position
                          fluidRow(column(3,actionButton("backButton", label="Back")),
-                                  column(3,actionButton("emailButton", label="Email Council"))),
+                                  column(3,actionButton("emailButton", label="Email Council")),
+                                  column(3,actionButton("pdfButton", label="Make PDF"))),
                          tags$br(),
                          conditionalPanel(condition="input.dataType=='Last Year'",
                                           fluidRow(
@@ -83,7 +84,10 @@ shinyUI(
                                                                            "Alphabetical"="alpha"))))
                          ),
                          tags$div(class="plotGraph", height="400px",
-                                  plotOutput("dataPlot", height="1500px"))
+                                  conditionalPanel(condition="input.dataType=='Last Year'",
+                                                   plotOutput("comparisonPlot", height="1500px")),
+                                  conditionalPanel(condition="input.dataType=='Over Time'",
+                                                   plotOutput("yearPlot", height="400px")))
                          )
     ),
     tags$p(id="footer", "Powered by RStudio Shiny and Catalyst Cloud"))

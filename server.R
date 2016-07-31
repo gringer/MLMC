@@ -7,7 +7,7 @@ core.df <- read.csv("data/Local_Authority_Financial_Statistics_Year_ended_June_2
 colnames(core.df)[4] <- "opex.1000";
 caveats.df <- read.csv("data/Local_Authority_Financial_Statistics_Caveats.csv");
 type.df <- read.csv("data/Local_Authority_Financial_Statistics_Council_Type.csv", row.names=1);
-core.df$Council.Type <- type.df$Council.Type[core.df$Council];
+core.df$Council.Type <- type.df[core.df$Council,"Council.Type"];
 defs.df <- read.csv("data/Local_Authority_Financial_Statistics_Activity_Definitions.csv");
 rownames(defs.df) <- defs.df$Activity;
 
@@ -42,7 +42,6 @@ shinyServer(function(input, output, session) {
   requestID <- substr(digest(Sys.time()),1,8);
   
   output$viewTopBlurb <- renderUI({
-    print(input$dataType);
     list("My council is ",tags$b(input$council),
          ", I'm interested in ", tags$b(input$cat),
          "and I want to ", tags$b(typeFull[input$dataType]));
@@ -55,32 +54,13 @@ shinyServer(function(input, output, session) {
          defs.df[input$cat,"Definitions"]));
   });
   
-  output$dataPlot <- renderPlot({
-    if(input$dataType == "Over Time"){
-      data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat));
-      #data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat) & 
-      #                        (Council.Type != type.df[input$council,"Council.Type"]));
-      data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
-        total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
-      plot(data.sub.df$Year, data.sub.df$pct.exp, ylab="Percent Expenditure",
-           xlab="Year", type="b", lwd=2, col="darkgreen");
-    }
-    if(input$dataType == "Last Year"){
-      data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat));
-      print(head(data.sub.df));
-      #data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat) & 
-      #                        Council.Type == type.df[input$council,"Council.Type"]);
-      data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
-        total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
-      data.sub.df$order <- order(data.sub.df$pct.exp);
-      data.sub.df <- data.sub.df[data.sub.df$order,];
-      data.sub.df$col <- ifelse(data.sub.df$Council == input$council,"darkGreen","grey");
-      par(mar=c(5,1,1,1));
-      res <- barplot(data.sub.df$pct.exp, horiz = TRUE, las=2,
-              col = data.sub.df$col, border=NA,
-              xlab="Percent Expenditure");
-      text(x=0,y=res,pos=4,labels = data.sub.df$Council, cex=0.8);
-    }
+  output$yearPlot <- renderPlot({
+    data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat));
+    data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
+                                   total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
+    plot(data.sub.df$Year, data.sub.df$pct.exp,
+         ylab=sprintf("Percent Expenditure"),
+         xlab="Year", type="b", lwd=2, col="darkgreen");
     if(input$tabPanel == "view"){
       ## record the data request in a log file
       ## [disabled for now until I can work out how to log as www-user]
@@ -88,6 +68,30 @@ shinyServer(function(input, output, session) {
     }
   });
   
+  output$comparisonPlot <- renderPlot({
+    councilType <- type.df[input$council,"Council.Type"];
+    #data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat));
+    data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat) & 
+                            Council.Type == councilType);
+    data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
+                                   total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
+    data.sub.df$order <- order(data.sub.df$pct.exp);
+    data.sub.df <- data.sub.df[data.sub.df$order,];
+    data.sub.df$col <- ifelse(data.sub.df$Council == input$council,"darkGreen","grey");
+    par(mar=c(1,1,5,1));
+    res <- barplot(data.sub.df$pct.exp, horiz = TRUE, las=2,
+                   col = data.sub.df$col, border=NA, xaxt="n");
+    text(x=0,y=res,pos=4,labels = data.sub.df$Council, cex=0.8);
+    axis(3);
+    mtext(sprintf("Percent Expenditure (vs other %s councils)", tolower(councilType)),
+          3, line = 3, cex=2);
+    if(input$tabPanel == "view"){
+      ## record the data request in a log file
+      ## [disabled for now until I can work out how to log as www-user]
+      #logOutput(input, requestID = requestID);
+    }
+  });
+
   ## Observers to detect button changes and switch tabs
   observeEvent(input$viewButton,{
     updateTabsetPanel(session, "tabPanel", selected = "view");
