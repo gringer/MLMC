@@ -27,6 +27,9 @@ councilNames <- type.df$Council;
 dataCats <- defs.df$Activity;
 
 logOutput <- function(input, requestID){
+  if(!file.exists("/home/govhack/ShinyLog")){
+    return();
+  }
   timeStr <- as.character(Sys.time());
   if(!file.exists("logs/accesslog.csv")){
     ## add file header (append=TRUE for the rare case of race conditions)
@@ -93,8 +96,7 @@ shinyServer(function(input, output, session) {
          xlab="Year", type="b", lwd=2, col="darkgreen");
     if(input$tabPanel == "view"){
       ## record the data request in a log file
-      ## [disabled for now until I can work out how to log as www-user]
-      #logOutput(input, requestID = requestID);
+      logOutput(input, requestID = requestID);
     }
   });
   
@@ -149,8 +151,7 @@ shinyServer(function(input, output, session) {
           3, line = 3, cex=2);
     if(input$tabPanel == "view"){
       ## record the data request in a log file
-      ## [disabled for now until I can work out how to log as www-user]
-      #logOutput(input, requestID = requestID);
+      logOutput(input, requestID = requestID);
     }
   });
   
@@ -200,14 +201,17 @@ shinyServer(function(input, output, session) {
   );
 
   ## Observers to detect button changes and switch tabs
+  ## view button
   observeEvent(input$viewButton,{
     updateTabsetPanel(session, "tabPanel", selected = "view");
     });
   
+  ## select / back button and logo
   observeEvent(input$backButton+input$logoLink,{
     updateTabsetPanel(session, "tabPanel", selected = "select");
   });
   
+  ## Change bar plot height on council type change
   observeEvent(input$council,{
     values$typeCount <- sum(type.df$Council.Type == type.df[input$council,"Council.Type"]);
     values$barPlotHeight <- values$typeCount * 25;
