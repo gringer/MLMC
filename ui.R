@@ -65,11 +65,7 @@ shinyUI(
                            column(9,tags$p("Description: Information used in this website is from the Local Authority
                                           Financial Statistics (LAFS) 30 June 2015 data set provided by Statistics New Zealand,
                                           and information on Council by Type and Council Contact Details held by the Department of Internal Affairs.
-                                          All information is licensed for re-use under the Creative Commons Attribution 4.0 International licence.", id="smallerfont"))),
-                         tags$br(),
-                         tags$br(),
-                         tags$div(id="bottomBorder", style="background-color: #23723F") 
-                         
+                                          All information is licensed for re-use under the Creative Commons Attribution 4.0 International licence.", id="smallerfont")))
                          ),
                 ### View panel ###
                 ## fixed position panel
@@ -98,6 +94,8 @@ shinyUI(
                                                    plotOutput("yearPlot", width="90%"))
                          ))
     ),
+    tags$br(),
+    tags$br(),
+    tags$div(id="bottomBorder", style="background-color: #23723F"),
     tags$p(id="footer", "Powered by RStudio Shiny and Catalyst Cloud"))
   ));
-  
