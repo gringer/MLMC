@@ -83,11 +83,11 @@ shinyUI(
                                                                            "Highest to lowest"="descending",
                                                                            "Alphabetical"="alpha"))))
                          ),
-                         tags$div(class="plotGraph", height="400px",
+                         tags$div(class="plotGraph",
                                   conditionalPanel(condition="input.dataType=='Last Year'",
-                                                   plotOutput("comparisonPlot", height="1500px", width="90%")),
+                                                   plotOutput("comparisonPlot", width="90%", height="1500px")),
                                   conditionalPanel(condition="input.dataType=='Over Time'",
-                                                     plotOutput("yearPlot", height="400px", width="80%"))
+                                                   plotOutput("yearPlot", width="90%"))
                          ))
     ),
     tags$p(id="footer", "Powered by RStudio Shiny and Catalyst Cloud"))
