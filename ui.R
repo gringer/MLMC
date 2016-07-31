@@ -33,14 +33,11 @@ shinyUI(
                 ### Select panel ###
                 tabPanel(title="Select", value="select", class="tabInterface",
                          tags$img(src="mylifemycouncil-bannerimage.jpg", id="banner"),
-                         tags$h3("How does my council spend its money?"),
-                         tags$p("We know that how your money is spent is very important to know but it
-                                can be very difficult to find out if your council is spending your money
-                                on your priorities."),
-                         tags$p("At My Life My Council we have brought together data from councils across
-                                the country to make it easy."),
+                         tags$h3("How does my council spend my money?"),
+                         tags$p("We know that how your money is spent is important to you."),
+                         tags$p("At My Life My Council we have brought together information from councils across the country to show you where your money is going."),
                          tags$h3("Find my council"),
-                         tags$p("Select from the options to find out how your council spends money on
+                         tags$p("Select from the options below to find out how your council spends money on
                                 what is important to you."),
                          fluidRow(
                            column(2,"My council is:"),
@@ -61,8 +58,19 @@ shinyUI(
                          fluidRow(
                            column(2,NULL),
                            column(9,actionButton("viewButton", label="See your council"))
-                         )
-                ),
+                         ),
+                         tags$br(),
+                         tags$br(),
+                         fluidRow(
+                           column(9,tags$p("Description: Information used in this website is from the Local Authority
+                                          Financial Statistics (LAFS) 30 June 2015 data set provided by Statistics New Zealand,
+                                          and information on Council by Type and Council Contact Details held by the Department of Internal Affairs.
+                                          All information is licensed for re-use under the Creative Commons Attribution 4.0 International licence.", id="smallerfont"))),
+                         tags$br(),
+                         tags$br(),
+                         tags$div(id="bottomBorder", style="background-color: #23723F") 
+                         
+                         ),
                 ### View panel ###
                 ## fixed position panel
                 tabPanel(title="View", value="view", class="tabInterface",

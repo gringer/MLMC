@@ -13,6 +13,7 @@
 #footer{
   margin-top:20px;
   font-size: 5;
+  margin-left:10px;
 }
 
 #banner {
@@ -54,8 +55,21 @@ h3, .h3 {
   color: #23723F;
 }
 
+#smallerfont {
+  
+  font-style: light;
+  font-size: 16;
+}
+
 button {
   color: #23723F;
   /*background-color: #900; */
   font-weight: bold;
+}
+
+#bottomBorder {
+  background-color: #23723F;
+  padding: 10px;
+  margin-left: -40px;
+  width: 100%;
 }
