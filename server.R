@@ -11,6 +11,7 @@ core.df$Council.Type <- type.df[core.df$Council,"Council.Type"];
 defs.df <- read.csv("data/Local_Authority_Financial_Statistics_Activity_Definitions.csv");
 rownames(defs.df) <- defs.df$Activity;
 contacts.df <- read.csv("data/NZ_Councils_Contact_List.csv");
+rownames(contacts.df) <- contacts.df$Council;
 
 typeFull <- c("Last Year" = "compare with other councils.",
               "Over Time" = "see my council's spending since 2010.");
@@ -48,6 +49,20 @@ shinyServer(function(input, output, session) {
          "and I want to ", tags$b(typeFull[input$dataType]));
   });
   
+  output$contactDetails <- renderUI({
+    fluidPage(
+      fluidRow(column(2,tags$b("Authority:")), column(5,input$council)),
+      fluidRow(column(2,tags$b("Phone:")), column(5,contacts.df[input$council,"Phone"])),
+      fluidRow(column(2,tags$b("Address:")), column(5,contacts.df[input$council,"Post"])),
+      fluidRow(column(2,tags$b("Email:")), 
+               column(5,tags$a(href=sprintf("mailto:%s",contacts.df[input$council,"Email"]),
+                               contacts.df[input$council,"Email"]))),
+      fluidRow(column(2,tags$b("Website:")), 
+               column(5,tags$a(href=sprintf("http://%s",contacts.df[input$council,"URL"]),
+                               contacts.df[input$council,"URL"])))
+    );
+  });
+
   output$viewDataDesc <- renderUI({
     list(tags$p(input$council, " is a ", tags$b(type.df[input$council,"Council.Type"]),
          "Authority."),

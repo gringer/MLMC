@@ -70,7 +70,7 @@ shinyUI(
                 ### View panel ###
                 ## fixed position panel
                 tabPanel(title="View", value="view", class="tabInterface",
-                         tags$h2("My Council"),
+                         tags$h3("My Council"),
                          uiOutput("viewTopBlurb",inline=TRUE),
                          tags$h3("About this data"),
                          uiOutput("viewDataDesc",inline=TRUE),
@@ -95,10 +95,13 @@ shinyUI(
                                                           operating expenditure. Councils are grouped into Unitary, Regional, and Territorial authorities,
                                                           because each of these groups are responsible for different activities.")),
                                   conditionalPanel(condition="input.dataType=='Over Time'",
-                                                    plotOutput("yearPlot", height="400px", width="80%"),
-                                                    tags$p("Description: The graph shows how much your council is spending on an activity over time.
-                                                          It's measured as a percentage of total operating expenditure.")))
+                                                   plotOutput("yearPlot", height="400px", width="80%"),
+                                                   tags$p("Description: The graph shows how much your council is spending on an activity over time.
+                                                          It's measured as a percentage of total operating expenditure.")),
+                                  tags$h3("Contact Details"),
+                                  uiOutput("contactDetails",inline=TRUE)
                          )
+                )
              ),
     tags$br(),
     tags$br(),
