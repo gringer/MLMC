@@ -75,7 +75,16 @@ shinyServer(function(input, output, session) {
                             Council.Type == councilType);
     data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
                                    total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
-    data.sub.df$order <- order(data.sub.df$pct.exp);
+    print(input$sortBy);
+    data.sub.df$order <- 
+      if(input$sortBy == "ascending") {
+        order(data.sub.df$pct.exp);
+      } else if(input$sortBy == "descending"){
+        order(-data.sub.df$pct.exp);
+      } else if(input$sortBy == "alpha"){
+        order(-xtfrm(data.sub.df$Council));
+      }
+    print(head(data.sub.df));
     data.sub.df <- data.sub.df[data.sub.df$order,];
     data.sub.df$col <- ifelse(data.sub.df$Council == input$council,"darkGreen","grey");
     par(mar=c(1,1,5,1));
