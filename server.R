@@ -49,6 +49,14 @@ shinyServer(function(input, output, session) {
          "and I want to ", tags$b(typeFull[input$dataType]));
   });
   
+  output$plotHeading <- renderUI({
+    councilType <- type.df[input$council,"Council.Type"];
+    fluidRow(
+      column(3,NULL),
+      column(9,tags$h3(sprintf("Percent Expenditure (vs other %s authorities)", 
+                               tolower(councilType)), style="margin-bottom:-25px")));
+  });
+
   output$contactDetails <- renderUI({
     fluidPage(
       fluidRow(column(2,tags$b("Authority:")), column(5,input$council)),
@@ -86,6 +94,19 @@ shinyServer(function(input, output, session) {
     }
   });
   
+  output$plotScaleBar <- renderPlot({
+    councilType <- type.df[input$council,"Council.Type"];
+    data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat) & 
+                            Council.Type == councilType);
+    data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
+                                   total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
+    dataMax <- max(data.sub.df$pct.exp);
+    par(mar=c(1,16,5,1));
+    res <- barplot(NA, horiz=TRUE, las=2, xlim=c(0,dataMax*1.1),
+                   ylim=c(0,1), axes=FALSE, ann=FALSE);
+    axis(3);
+  });
+  
   output$comparisonPlot <- renderPlot({
     councilType <- type.df[input$council,"Council.Type"];
     #data.sub.df <- subset(core.df, (Year == lastYear) & (Activity == input$cat));
@@ -105,13 +126,12 @@ shinyServer(function(input, output, session) {
     print(head(data.sub.df));
     data.sub.df <- data.sub.df[data.sub.df$order,];
     data.sub.df$col <- ifelse(data.sub.df$Council == input$council,"#23723F","#90DDAB");
-    par(mar=c(1,16,5,1));
+    par(mar=c(0,16,0,1));
     dataMax <- max(data.sub.df$pct.exp);
     res <- barplot(data.sub.df$pct.exp, names.arg=data.sub.df$Council, horiz = TRUE, las=2,
                    xlim=c(0,dataMax*1.1), col=data.sub.df$col, border=NA, xaxt="n");
     text(x=data.sub.df$pct.exp, y=res, pos=4, labels=data.sub.df$pct.exp, cex=0.8,
          col=data.sub.df$col);
-    axis(3);
     mtext(sprintf("Percent Expenditure (vs other %s authorities)", tolower(councilType)),
           3, line = 3, cex=2);
     if(input$tabPanel == "view"){

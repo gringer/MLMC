@@ -76,7 +76,7 @@ shinyUI(
                          uiOutput("viewDataDesc",inline=TRUE),
                          ## less about height, more about position
                          fluidRow(column(3,actionButton("backButton", label="Back")),
-                                  column(3,actionButton("emailButton", label="Email Council")),
+                                  column(6,NULL),
                                   column(3,actionButton("pdfButton", label="Make PDF"))),
                          tags$br(),
                          conditionalPanel(condition="input.dataType=='Last Year'",
@@ -89,6 +89,8 @@ shinyUI(
                          ),
                          tags$div(class="plotGraph", height="400px",
                                   conditionalPanel(condition="input.dataType=='Last Year'",
+                                                   uiOutput("plotHeading"),
+                                                   plotOutput("plotScaleBar", width="95%", height="100px"),
                                                    tags$div(style="height: 400px; width: 95%; overflow: auto;",plotOutput("comparisonPlot", width="90%", height="1500px")),
                                                    tags$br(),
                                                    tags$p(tags$b("Description:")," The graph shows how much each council is spending on an activity,
