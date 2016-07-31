@@ -30,6 +30,7 @@ logOutput <- function(input, requestID){
   if(!file.exists("/home/govhack/ShinyLog")){
     return();
   }
+  return(); ## still not working...
   timeStr <- as.character(Sys.time());
   if(!file.exists("logs/accesslog.csv")){
     ## add file header (append=TRUE for the rare case of race conditions)
