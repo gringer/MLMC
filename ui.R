@@ -65,10 +65,9 @@ shinyUI(
                            column(9,tags$p("Description: Information used in this website is from the Local Authority
                                           Financial Statistics (LAFS) 30 June 2015 data set provided by Statistics New Zealand,
                                           and information on Council by Type and Council Contact Details held by the Department of Internal Affairs.
-                                          All information is licensed for re-use under the Creative Commons Attribution 4.0 International licence.", id="smallerfont"))),
-                         tags$br(),
-                         tags$br(),
-                         tags$div(id="bottomBorder", style="background-color: #23723F") 
+                                          All information is licensed for re-use under the Creative Commons Attribution 4.0 International licence.", id="smallerfont")))
+                         
+                         #tags$div(id="bottomBorder", style="background-color: #23723F") 
                          
                          ),
                 ### View panel ###
@@ -91,13 +90,23 @@ shinyUI(
                                                                            "Highest to lowest"="descending",
                                                                            "Alphabetical"="alpha"))))
                          ),
-                         tags$div(class="plotGraph",
+                         tags$div(class="plotGraph", height="400px",
                                   conditionalPanel(condition="input.dataType=='Last Year'",
-                                                   plotOutput("comparisonPlot", width="90%", height="1500px")),
+                                                   plotOutput("comparisonPlot", height="1500px", width="90%"),
+                                                   tags$p("Description: The graph shows how much each council is spending on an activity,
+                                                          compared to other similar councils. It's measured as a percentage of the council's total
+                                                          operating expenditure. Councils are grouped into Unitary, Regional, and Territorial authorities,
+                                                          because each of these groups are responsible for different activities.")),
                                   conditionalPanel(condition="input.dataType=='Over Time'",
-                                                   plotOutput("yearPlot", width="90%"))
+                                                    plotOutput("yearPlot", height="400px", width="80%"),
+                                                    tags$p("Description: The graph shows how much your council is spending on an activity over time.
+                                                          It's measured as a percentage of total operating expenditure."))
                          ))
     ),
+    
+    tags$br(),
+    tags$br(),
+    tags$div(id="bottomBorder", style="background-color: #23723F"), 
     tags$p(id="footer", "Powered by RStudio Shiny and Catalyst Cloud"))
   ));
   
