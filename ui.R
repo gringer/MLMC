@@ -28,7 +28,11 @@ shinyUI(
     useShinyjs(),  ## load shiny js library
     ## Application title
     fluidRow(
-    tags$div(id="mainApp", fluidRow(column(1,tags$img(id="logo", src="mylifemycouncil-logo.png")))),
+    tags$div(id="mainApp", 
+             fluidRow(column(1,tags$img(id="logo", src="mylifemycouncil-logo.png"))),
+                      #column(6,NULL),
+                      #column(5,tags$iframe(width=560, height=315, src="https://www.youtube.com/embed/yTgZVVHJMlw",
+                      #                  frameborder=0))),
              tabsetPanel(id="tabPanel",
                 ### Select panel ###
                 tabPanel(title="Select", value="select", class="tabInterface",
@@ -107,8 +111,12 @@ shinyUI(
                          )
                 )
              ),
-    tags$br(),
-    tags$br(),
-    tags$div(id="bottomBorder", style="background-color: #23723F"),
-    tags$p(id="footer", "Powered by RStudio",tags$sup("®"), " Shiny and Catalyst Cloud. See ",tags$a(href="https://github.com/gringer/MLMC","here"),"for the code used to make this website."))
+             tags$br(),
+             tags$br(),
+             tags$div(id="bottomBorder", style="background-color: #23723F"),
+             tags$p(id="footer", "Powered by RStudio",tags$sup("®"),
+                    " Shiny and Catalyst Cloud. See ",
+                    tags$a(href="https://github.com/gringer/MLMC","here"),
+                    "for the code used to make this website."))
+    )
   ));

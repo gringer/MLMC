@@ -115,7 +115,6 @@ shinyServer(function(input, output, session) {
     data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
                                    total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
     council.value <- subset(data.sub.df, Council == input$council)$pct.exp;
-    print(input$sortBy);
     data.sub.df$order <- 
       if(input$sortBy == "descending") {
         order(data.sub.df$pct.exp);
@@ -124,7 +123,6 @@ shinyServer(function(input, output, session) {
       } else if(input$sortBy == "alpha"){
         order(-xtfrm(data.sub.df$Council));
       }
-    print(head(data.sub.df));
     data.sub.df <- data.sub.df[data.sub.df$order,];
     data.sub.df$col <- ifelse(c(data.sub.df$Council == input$council),"#23723F","#90DDAB");
     par(mar=c(0,20,0,1));
@@ -157,7 +155,6 @@ shinyServer(function(input, output, session) {
   
   observeEvent(input$council,{
     typeCount <- sum(type.df$Council.Type == type.df[input$council,"Council.Type"]);
-    print(typeCount);
     });
   
   });
