@@ -148,7 +148,8 @@ shinyServer(function(input, output, session) {
     data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat));
     data.sub.df$pct.exp <- signif(data.sub.df$opex.1000 /
                                    total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,2);
-    plot(data.sub.df$Year, data.sub.df$pct.exp,
+    dataMax <- max(data.sub.df$pct.exp);
+    plot(data.sub.df$Year, data.sub.df$pct.exp, ylim=c(0,dataMax),
          ylab=sprintf("Percent Expenditure"),
          xlab="Year", type="b", lwd=2, col="darkgreen");
   });
@@ -221,8 +222,9 @@ shinyServer(function(input, output, session) {
     },
     content = function(con){
       #basicPDF(input, con);
-      rmarkdown::render("MLMC.Rmd", "pdf_document", output_file = con,
-                        intermediates_dir = "tmp");
+      cat("Making PDF\n");
+      isolate({rmarkdown::render("MLMC.Rmd", "pdf_document", output_file = con,
+                        intermediates_dir = "tmp")});
     },
     contentType = "text/pdf"
   );
