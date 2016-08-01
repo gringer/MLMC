@@ -115,7 +115,11 @@ shinyServer(function(input, output, session) {
     data.sub.df$pct.exp <- round(data.sub.df$opex.1000 /
                                    total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,1);
     dataMax <- max(data.sub.df$pct.exp);
-    par(mar=c(0,20,4,2));
+    if(dev.size("px")[1] > 600){
+      par(mar = c(0,20,4,2));
+    } else {
+      par(mar = c(0,8,4,2));
+    }
     res <- barplot(NA, horiz=TRUE, las=2, xlim=c(0,dataMax*1.1), yaxs="i", xaxt="n");
     axis(3);
   });
@@ -144,10 +148,16 @@ shinyServer(function(input, output, session) {
       }
     data.sub.df <- data.sub.df[data.sub.df$order,];
     data.sub.df$col <- ifelse(c(data.sub.df$Council == input$council),"#23723F","#90DDAB");
-    par(mar=c(0,20,0,2));
+    councilLabels <- c(data.sub.df$Council,"",input$council);
+    if(dev.size("px")[1] > 600){
+      par(mar = c(0,20,0,2));
+    } else {
+      par(mar = c(0,8,0,2), cex.axis=0.75);
+      councilLabels <- sub(" District$","", sub(" Council$","",councilLabels));
+    }
     dataMax <- max(data.sub.df$pct.exp);
     res <- barplot(c(data.sub.df$pct.exp,0,council.value),
-                   names.arg=c(data.sub.df$Council,"",input$council), 
+                   names.arg=councilLabels,
                    horiz=TRUE, las=2, yaxs="i",
                    col=c(data.sub.df$col,NA,"#23723F"),
                    border=NA, xaxt="n");
