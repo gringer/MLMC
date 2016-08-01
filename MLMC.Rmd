@@ -5,6 +5,7 @@ output:
   pdf_document:
     latex_engine: pdflatex
 geometry: margin=2cm
+urlcolour: green
 ---
 
 ```{r setup, include=FALSE}
@@ -12,9 +13,7 @@ knitr::opts_chunk$set(echo = TRUE, dev="pdf")
 ```
 
 
-## My Council
-
-My council is **`r input$council`**, and I'm interested in **`r input$cat`**.
+My council is **`r input$council`**, and I'm interested in **`r input$cat`**. Funding towards `r sprintf("%s %s", tolower(input$cat), defs.df[input$cat,"Basic.definition."])`
 
 -----
 
@@ -28,6 +27,23 @@ plot(data.sub.df$Year, data.sub.df$pct.exp, ylim=c(0,dataMax),
      xlab="Year", type="b", lwd=2, col="darkgreen");
 mtext(input$council, 3, 0.5, cex=0.75);
 ```
+
+-----
+
+**Contact** | **Detail**
+----------- | ----
+Authority   | `r input$council`
+Phone       | `r contacts.df[input$council,"Phone"]`
+Post        | `r contacts.df[input$council,"Post"]`
+Email       | [`r contacts.df[input$council,"Email"]`](mailto:`r contacts.df[input$council,"Email"]`)
+Website     | [`r contacts.df[input$council,"URL"]`](http://`r contacts.df[input$council,"URL"]`)
+
+Councils are grouped into Unitary, Regional, and Territorial authorities, because each of these groups are responsible for different activities. My council, **`r input$council`**, is a **`r tags$b(type.df[input$council,"Council.Type"])`** Authority.
+
+See [Internal Affairs][1] and [Statistics New Zealand][2] for more information.
+
+[1]: http://www.localcouncils.govt.nz/lgip.nsf/wpg_url/About-Local-Government-Index
+[2]: http://datainfoplus.stats.govt.nz/Item/nz.govt.stats/319be03d-287d-4384-993a-d38ef9acb3e6#/nz.govt.stats/6b459c66-0e05-4aa7-997e-d4a5e40941dd
 
 ```{r, echo=FALSE, fig.height=9, fig.width=8}
     councilType <- type.df[input$council,"Council.Type"];
