@@ -221,7 +221,8 @@ shinyServer(function(input, output, session) {
     },
     content = function(con){
       #basicPDF(input, con);
-      rmarkdown::render("MLMC.Rmd", "pdf_document", output_file = con);
+      rmarkdown::render("MLMC.Rmd", "pdf_document", output_file = con,
+                        intermediates_dir = "tmp");
     },
     contentType = "text/pdf"
   );
