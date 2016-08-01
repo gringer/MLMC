@@ -152,7 +152,7 @@ shinyServer(function(input, output, session) {
     if(dev.size("px")[1] > 600){
       par(mar = c(0,20,0,2));
     } else {
-      par(mar = c(0,8,0,2), cex.axis=0.75);
+      par(mar = c(0,8,0,2), cex.axis=0.6);
       councilLabels <- sub(" District$","", sub(" Council$","",councilLabels));
     }
     dataMax <- max(data.sub.df$pct.exp);
