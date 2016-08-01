@@ -47,9 +47,11 @@ logOutput <- function(input, requestID){
       }
     }
   }, error=function(cond){
-    cat("Error: ",cond,"\n",sep="\n");
+    cat("Error:\n");
+    message(cond);
   }, warning=function(cond){
-    cat("Warning: ",cond,"\n",sep="\n");
+    cat("Warning:\n");
+    message(cond);
   });
 }
 
