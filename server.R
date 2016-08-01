@@ -28,23 +28,29 @@ councilNames <- type.df$Council;
 dataCats <- defs.df$Activity;
 
 logOutput <- function(input, requestID){
-  if(!file.exists("/home/govhack/ShinyLog")){
+  if(!file.exists("logs")){
     return();
   }
-  return(); ## still not working...
-  timeStr <- as.character(Sys.time());
-  if(!file.exists("logs/accesslog.csv")){
-    ## add file header (append=TRUE for the rare case of race conditions)
-    cat("requestID,time,inputCategory,value\n", file = "accesslog.csv", append=TRUE);
-  }
-  for(n in names(input)){
-    if(is.character(input[[n]]) || (is.numeric(input[[n]]) && (length(input[[n]]) == 1))){
-      cat(file = "logs/accesslog.csv",
-          append=TRUE, sprintf("%s,%s,\"%s\",\"%s\"\n",
-                               requestID, timeStr, n,
-                               substring(paste(input[[n]], collapse=";"),1,100)));
+  ## Don't destroy the App just because logging fails
+  tryCatch({
+    timeStr <- as.character(Sys.time());
+    if(!file.exists("logs/accesslog.csv")){
+      ## add file header (append=TRUE for the rare case of race conditions)
+      cat("requestID,time,inputCategory,value\n", file = "accesslog.csv", append=TRUE);
     }
-  }
+    for(n in names(input)){
+      if(is.character(input[[n]]) || (is.numeric(input[[n]]) && (length(input[[n]]) == 1))){
+        cat(file = "logs/accesslog.csv",
+            append=TRUE, sprintf("%s,%s,\"%s\",\"%s\"\n",
+                                 requestID, timeStr, n,
+                                 substring(paste(input[[n]], collapse=";"),1,100)));
+      }
+    }
+  }, error=function(cond){
+    cat("Error: ",cond,"\n",sep="\n");
+  }, warning=function(cond){
+    cat("Warning: ",cond,"\n",sep="\n");
+  });
 }
 
 shinyServer(function(input, output, session) {
