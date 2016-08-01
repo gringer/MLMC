@@ -36,7 +36,8 @@ logOutput <- function(input, requestID){
     timeStr <- as.character(Sys.time());
     if(!file.exists("logs/accesslog.csv")){
       ## add file header (append=TRUE for the rare case of race conditions)
-      cat("requestID,time,inputCategory,value\n", file = "accesslog.csv", append=TRUE);
+      cat("requestID,time,inputCategory,value\n",
+          file = "logs/accesslog.csv", append=TRUE);
     }
     for(n in names(input)){
       if(is.character(input[[n]]) || (is.numeric(input[[n]]) && (length(input[[n]]) == 1))){
