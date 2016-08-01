@@ -1,0 +1,32 @@
+---
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+![My Life, My Council -- A GovHack 2016 Project](mockups/mylifemycouncil-logo.png)
+
+## My Council
+
+My council is `r input$council`, I'm interested in `r input$cat` and I want to `r typeFull[input$dataType]`
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+```{r Time Series, echo=FALSE}
+data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat));
+data.sub.df$pct.exp <- signif(data.sub.df$opex.1000 /
+total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,2);
+par(mar=c(5, 4, 4, 2) + 0.1); # reset mar to default
+plot(data.sub.df$Year, data.sub.df$pct.exp,
+     ylab=sprintf("Percent Expenditure"), main=input$cat,
+     xlab="Year", type="b", lwd=2, col="darkgreen");
+mtext(input$council, 3, 0.5, cex=0.75);
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+----
+
+Generated `r format(Sys.Date(),"%Y-%b-%d")` using [R Markdown](http://rmarkdown.rstudio.com/).
