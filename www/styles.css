@@ -1,9 +1,25 @@
 #mainApp{
   margin-left: 50px;
+  margin-right: 50px;
 }
 
-#logo{
-  margin-top:10px;
+#logo {
+  max-width: 100%;
+  height: 175px;
+}
+
+#logoDiv {
+  margin: 10px 0 0 0;  /* top right bottom left */
+}
+
+#video {
+  max-width: 100%;
+  height: 175px;
+}
+
+#videoDiv {
+  margin: 10px 0 0 0;
+  text-align: right;
 }
 
 #tabPanel{
@@ -20,7 +36,7 @@
 }
 
 #bannerDiv {
-  margin: 10px 0 10px -50px; /* top right bottom left */
+  margin: 10px -50px 10px -50px; /* top right bottom left */
 }
 
 #scaleBarDiv {
@@ -73,6 +89,6 @@ button {
 #bottomBorder {
   background-color: #23723F;
   padding: 10px;
-  margin-right: 0;
+  margin-right: -50px;
   margin-left: -50px;
 }

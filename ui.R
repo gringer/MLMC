@@ -28,7 +28,11 @@ shinyUI(
     useShinyjs(),  ## load shiny js library
     ## Application title
     tags$div(id="mainApp", 
-             fluidRow(column(1,actionLink("logoLink", tags$img(id="logo", src="mylifemycouncil-logo.png")))),
+             fluidRow(column(6,actionLink("logoLink", 
+                                          tags$div(id="logoDiv",tags$img(id="logo", src="mylifemycouncil-logo.png")))),
+                      column(6,tags$div(id="videoDiv",tags$iframe(id="video", src="https://player.vimeo.com/video/176900559",
+                                                                  frameborder=0)))),
+#<p><a href="https://vimeo.com/176900559">My Life My Council</a> from <a href="https://vimeo.com/user54945005">Lucy Morgan</a> on <a href="https://vimeo.com">Vimeo</a>.</p>")),
                       #column(6,NULL),
                       #column(5,tags$iframe(width=560, height=315, src="https://www.youtube.com/embed/yTgZVVHJMlw",
                       #                  frameborder=0))),
