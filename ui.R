@@ -28,8 +28,8 @@ shinyUI(
     useShinyjs(),  ## load shiny js library
     ## Application title
     tags$div(id="mainApp", 
-             fluidRow(column(6,actionLink("logoLink", 
-                                          tags$div(id="logoDiv",tags$img(id="logo", src="mylifemycouncil-logo.png")))),
+             fluidRow(column(6,tags$div(id="logoDiv",
+                                        actionLink("logoLink",tags$img(id="logo", src="mylifemycouncil-logo.png")))),
                       column(6,tags$div(id="videoDiv", class="pull-right",
                                         tags$iframe(id="video", src="https://player.vimeo.com/video/176900559",
                                                     frameborder=0)))),

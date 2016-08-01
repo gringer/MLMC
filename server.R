@@ -110,10 +110,6 @@ shinyServer(function(input, output, session) {
     plot(data.sub.df$Year, data.sub.df$pct.exp,
          ylab=sprintf("Percent Expenditure"),
          xlab="Year", type="b", lwd=2, col="darkgreen");
-    if(input$tabPanel == "view"){
-      ## record the data request in a log file
-      logOutput(input, requestID = requestID);
-    }
   });
   
   output$plotScaleBar <- renderPlot({
@@ -175,10 +171,6 @@ shinyServer(function(input, output, session) {
          col=c(data.sub.df$col,NA,"#23723F"), xpd=TRUE);
     mtext(sprintf("Percent Expenditure (vs other %s authorities)", tolower(councilType)),
           3, line = 3, cex=2);
-    if(input$tabPanel == "view"){
-      ## record the data request in a log file
-      logOutput(input, requestID = requestID);
-    }
   });
   
   output$makePDF <- downloadHandler(
@@ -230,7 +222,9 @@ shinyServer(function(input, output, session) {
   ## view button
   observeEvent(input$viewButton,{
     updateTabsetPanel(session, "tabPanel", selected = "view");
-    });
+    ## record the data request in a log file
+    logOutput(input, requestID = requestID);
+  });
   
   ## select / back button and logo
   observeEvent(input$backButton+input$logoLink,{
