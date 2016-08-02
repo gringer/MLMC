@@ -16,12 +16,18 @@ rownames(defs.df) <- defs.df$Activity;
 contacts.df <- read.csv("data/NZ_Councils_Contact_List.csv");
 rownames(contacts.df) <- contacts.df$Council;
 
-terr.poss <- scan("https://datafinder.stats.govt.nz/services/query/v1/vector.json?key=0b76d98b83fa4e0dab5c295f760826b9&layer=8409&x=174.5941734677686&y=-41.1935098748271&max_results=3&radius=10000&geometry=false&with_field_names=true",
-                  sep="\n", what=character());
-
-
 values <- reactiveValues();
 values$barPlotHeight <- 400;
+
+## Retrieve region IDs from Stats NZ WFS service
+## [see https://wiki.state.ma.us/confluence/display/massgis/GeoServer+-+WFS+-+Examples]
+
+authority.regions.df <-
+  read.csv(paste(sep="&","https://datafinder.stats.govt.nz/services;key=0b76d98b83fa4e0dab5c295f760826b9/wfs?service=WFS",
+             "request=getFeature",
+             "outputFormat=csv",
+             "typeName=layer-8409",
+             "propertyname=TA2016_NAME,LAND_AREA_SQ_KM"), stringsAsFactors = FALSE);
 
 typeFull <- c("Last Year" = "compare with other councils.",
               "Over Time" = "see my council's spending since 2010.");
@@ -235,9 +241,10 @@ shinyServer(function(input, output, session) {
   );
   
   output$nzMap <- renderLeaflet({
-    leaflet() %>%
+    values$baseMap <- leaflet() %>%
       addTiles() %>%  # Add default OpenStreetMap map tiles
-      addGeoJSON(geojson = terr.poss);
+      fitBounds(lng1=165.973643765, lng2=175.37904683,
+                lat1=-47.724045517, lat2=-33.9584981); # set to range of Territorial Authorities
   });
 
   ## Observers to detect button changes and switch tabs
@@ -254,9 +261,22 @@ shinyServer(function(input, output, session) {
   });
   
   ## Change bar plot height on council type change
+  ## Change displayed region on council type change
   observeEvent(input$council,{
     values$typeCount <- sum(type.df$Council.Type == type.df[input$council,"Council.Type"]);
     values$barPlotHeight <- values$typeCount * 25;
-    });
+    region.id <- authority.regions.df$FID[match(sub(" Council$","",input$council),
+                                                authority.regions.df$TA2016_NAME)];
+    values$councilJSON <-
+      scan(paste(sep="&","https://datafinder.stats.govt.nz/services;key=0b76d98b83fa4e0dab5c295f760826b9/wfs?service=WFS",
+                 "request=getFeature",
+                 "typeNames=layer-8409",
+                 "outputFormat=application/json",
+                 paste0("featureId=",region.id),
+                 "count=1"),
+           sep="\n", what=character(), quiet = TRUE);
+    leafletProxy("nzMap") %>% clearGeoJSON() %>%
+      addGeoJSON(input$baseMap, geojson = values$councilJSON);
+  });
   
   });

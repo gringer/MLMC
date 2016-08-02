@@ -1,5 +1,5 @@
 # MLMC
-My Life, My Council
+![My Life, My Council](mockups/mylifemycouncil-logo.png "MLMC logo")
 
 Is my council spending my money on the things I care about? How does my council's spending compare with other councils?
 

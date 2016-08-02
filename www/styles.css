@@ -18,7 +18,7 @@
 }
 
 @media screen and (max-width: 767px) {
-    #video {
+    #nzMap,#video {
       display: none;
     }
     #logo {
