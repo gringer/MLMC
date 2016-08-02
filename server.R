@@ -1,6 +1,7 @@
 library(shiny);
 library(digest);
 library(rmarkdown);
+library(leaflet);
 
 options(stringsAsFactors = FALSE);
 core.df <- read.csv("data/Local_Authority_Financial_Statistics_Year_ended_June_2015_EXPENDITURE_TABLE.csv");
@@ -14,6 +15,10 @@ defs.df <- read.csv("data/Local_Authority_Financial_Statistics_Activity_Definiti
 rownames(defs.df) <- defs.df$Activity;
 contacts.df <- read.csv("data/NZ_Councils_Contact_List.csv");
 rownames(contacts.df) <- contacts.df$Council;
+
+terr.poss <- scan("https://datafinder.stats.govt.nz/services/query/v1/vector.json?key=0b76d98b83fa4e0dab5c295f760826b9&layer=8409&x=174.5941734677686&y=-41.1935098748271&max_results=3&radius=10000&geometry=false&with_field_names=true",
+                  sep="\n", what=character());
+
 
 values <- reactiveValues();
 values$barPlotHeight <- 400;
@@ -228,6 +233,12 @@ shinyServer(function(input, output, session) {
     },
     contentType = "text/pdf"
   );
+  
+  output$nzMap <- renderLeaflet({
+    leaflet() %>%
+      addTiles() %>%  # Add default OpenStreetMap map tiles
+      addGeoJSON(geojson = terr.poss);
+  });
 
   ## Observers to detect button changes and switch tabs
   ## view button

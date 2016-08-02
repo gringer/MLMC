@@ -9,6 +9,7 @@
 
 library(shiny);
 library(shinyjs);
+library(leaflet);
 
 options(stringsAsFactors = FALSE);
 type.df <- read.csv("data/Local_Authority_Financial_Statistics_Council_Type.csv");
@@ -44,29 +45,35 @@ shinyUI(
                          tags$h3("How does my council spend my money?"),
                          tags$p("We know that how your money is spent is important to you."),
                          tags$p("At My Life My Council we have brought together information from councils across the country to show you where your money is going."),
-                         tags$h3("Find my council"),
-                         tags$p("Select from the options below to find out how your council spends money on
-                                what is important to you."),
                          fluidRow(
-                           column(2,"My council is:"),
-                           column(6,selectInput("council", label=NULL,
-                                                choices=councilNames,
-                                                selected="Wellington City Council"))
-                         ),
-                         fluidRow(
-                           column(2,"I'm interested in:"),
-                           column(6,selectInput("cat", label=NULL, choices=dataCats, selected=sample(dataCats,1)))
-                         ),
-                         fluidRow(
-                           column(2,"I want to:"),
-                           column(9,radioButtons("dataType", label=NULL,
+                           column(8,
+                                  tags$h3("Find my council"),
+                                  tags$p("Select from the options below to find out how",
+                                         "your council spends money on what is important",
+                                         "to you."),
+                                  fluidRow(
+                                    column(4,"My council is:"),
+                                    column(8,selectInput("council", label=NULL,
+                                                         choices=councilNames,
+                                                         selected="Wellington City Council"))
+                                  ),
+                                  fluidRow(
+                                    column(4,"I'm interested in:"),
+                                    column(8,selectInput("cat", label=NULL, choices=dataCats, selected=sample(dataCats,1)))
+                                  ),
+                                  fluidRow(
+                                    column(4,"I want to:"),
+                                    column(8,radioButtons("dataType", label=NULL,
                                                  choices=c("compare with other councils for 2015" = "Last Year",
                                                            "see my council's spending since 2010" = "Over Time")))
-                         ),
-                         fluidRow(
-                           column(2,NULL),
-                           column(9,actionButton("viewButton", label="See your council"))
-                         ),
+                                  ),
+                                  fluidRow(
+                                    column(4,NULL),
+                                    column(8,actionButton("viewButton", label="See your council"))
+                                  )
+                           ), # closes council/category select column
+                           column(4,leafletOutput("nzMap"))
+                         ),# closes council information row
                          tags$br(),
                          tags$br(),
                          fluidRow(
@@ -75,8 +82,9 @@ shinyUI(
                                             tags$a(href="http://www.stats.govt.nz/tools_and_services/releases_csv_files/csv-files-for-infoshare.aspx","Statistics New Zealand"),
                                             ", and information on Council by Type and Council Contact Details held by the ",
                                            tags$a(href="http://www.localcouncils.govt.nz/","Department of Internal Affairs"),".
-                                          All information is licensed for re-use under the Creative Commons Attribution 4.0 International licence.", id="smallerfont")))
-                         ),
+                                          All information is licensed for re-use under the Creative Commons Attribution 4.0 International licence.", id="smallerfont"))
+                         )
+                ),
                 ### View panel ###
                 ## fixed position panel
                 tabPanel(title="View", value="view", class="tabInterface",
