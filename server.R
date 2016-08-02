@@ -241,11 +241,10 @@ shinyServer(function(input, output, session) {
   );
   
   output$nzMap <- renderLeaflet({
-    leaflet() %>%
+    values$baseMap <- leaflet() %>%
       addTiles() %>%  # Add default OpenStreetMap map tiles
       fitBounds(lng1=165.973643765, lng2=175.37904683,
-                lat1=-47.724045517, lat2=-33.9584981) %>% # set to range of Territorial Authorities
-      addGeoJSON(geojson = values$councilJSON);
+                lat1=-47.724045517, lat2=-33.9584981); # set to range of Territorial Authorities
   });
 
   ## Observers to detect button changes and switch tabs
@@ -276,6 +275,8 @@ shinyServer(function(input, output, session) {
                  paste0("featureId=",region.id),
                  "count=1"),
            sep="\n", what=character(), quiet = TRUE);
+    leafletProxy("nzMap") %>% clearGeoJSON() %>%
+      addGeoJSON(input$baseMap, geojson = values$councilJSON);
   });
   
   });
