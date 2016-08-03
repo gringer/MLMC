@@ -53,9 +53,8 @@ shinyUI(
                                          "to you."),
                                   fluidRow(
                                     column(4,"My council is:"),
-                                    column(8,selectInput("council", label=NULL,
-                                                         choices=councilNames,
-                                                         selected="Wellington City Council"))
+                                    column(8,selectizeInput("council", label="Enter address or select", options=list(create=TRUE),
+                                                         choices=c("",councilNames)))
                                   ),
                                   fluidRow(
                                     column(4,"I'm interested in:"),

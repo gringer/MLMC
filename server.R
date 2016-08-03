@@ -9,7 +9,8 @@ core.df <- read.csv("data/Local_Authority_Financial_Statistics_Year_ended_June_2
 colnames(core.df)[4] <- "opex.1000";
 caveats.df <- read.csv("data/Local_Authority_Financial_Statistics_Caveats.csv");
 rownames(caveats.df) <- caveats.df$Council;
-type.df <- read.csv("data/Local_Authority_Financial_Statistics_Council_Type.csv", row.names=1);
+type.df <- read.csv("data/Local_Authority_Financial_Statistics_Council_Type.csv");
+rownames(type.df) <- type.df$Council;
 core.df$Council.Type <- type.df[core.df$Council,"Council.Type"];
 defs.df <- read.csv("data/Local_Authority_Financial_Statistics_Activity_Definitions.csv");
 rownames(defs.df) <- defs.df$Activity;
@@ -246,6 +247,9 @@ shinyServer(function(input, output, session) {
       fitBounds(lng1=165.973643765, lng2=175.37904683,
                 lat1=-47.724045517, lat2=-33.9584981); # set to range of Territorial Authorities
   });
+  
+  ## Populate address finder
+  
 
   ## Observers to detect button changes and switch tabs
   ## view button
@@ -263,20 +267,55 @@ shinyServer(function(input, output, session) {
   ## Change bar plot height on council type change
   ## Change displayed region on council type change
   observeEvent(input$council,{
-    values$typeCount <- sum(type.df$Council.Type == type.df[input$council,"Council.Type"]);
-    values$barPlotHeight <- values$typeCount * 25;
-    region.id <- authority.regions.df$FID[match(sub(" Council$","",input$council),
-                                                authority.regions.df$TA2016_NAME)];
-    values$councilJSON <-
-      scan(paste(sep="&","https://datafinder.stats.govt.nz/services;key=0b76d98b83fa4e0dab5c295f760826b9/wfs?service=WFS",
-                 "request=getFeature",
-                 "typeNames=layer-8409",
-                 "outputFormat=application/json",
-                 paste0("featureId=",region.id),
-                 "count=1"),
-           sep="\n", what=character(), quiet = TRUE);
-    leafletProxy("nzMap") %>% clearGeoJSON() %>%
-      addGeoJSON(input$baseMap, geojson = values$councilJSON);
+    if(!(input$council %in% councilNames)){
+      if(nchar(input$council) > 5){
+        searchName <- isolate(input$council);
+        cat(sprintf("Searching for '%s'...", searchName));
+        ## find address latitude/longitude
+        req <- paste(sep="&","http://data.linz.govt.nz/services;key=cbcae793850342e8be9908602a1e60a8/wfs?service=WFS",
+                     "request=getFeature",
+                     "outputFormat=csv",
+                     "typeName=layer-3353",
+                     "count=5",
+                     URLencode(sprintf("CQL_FILTER=full_address ILIKE '%s%%'", searchName)),
+                     "propertyname=full_address,gd2000_xcoord,gd2000_ycoord");
+        addr.df <- read.csv(req, stringsAsFactors = FALSE);
+        cat(" done\n");
+        if(nrow(addr.df) == 1){
+          leafletProxy("nzMap") %>% clearMarkers() %>%
+            addMarkers(addr.df$gd2000_xcoord,addr.df$gd2000_ycoord,popup=addr.df$full_address) %>%
+            setView(addr.df$gd2000_xcoord, addr.df$gd2000_ycoord, zoom=17);
+          ## identify intersecting territorial authority
+          req <- paste(sep="&","https://datafinder.stats.govt.nz/services;key=0b76d98b83fa4e0dab5c295f760826b9/wfs?service=WFS",
+                       "request=getFeature",
+                       "typeNames=layer-8409",
+                       "outputFormat=csv",
+                       "count=5",
+                       URLencode(sprintf("CQL_FILTER=CONTAINS(GEOMETRY, POINT(%f %f))",addr.df$gd2000_ycoord, addr.df$gd2000_xcoord)),
+                       "propertyname=TA2016_NAME");
+          council.df <- read.csv(req, stringsAsFactors = FALSE);
+          council.df$TAName <- paste0(council.df$TA2016_NAME," Council");
+          if(council.df$TAName %in% rownames(type.df)){
+            updateSelectizeInput(session, "council", choices = councilNames, selected=council.df$TAName, label=NULL);
+          }
+        }
+      }
+    } else {
+      values$typeCount <- sum(type.df$Council.Type == type.df[input$council,"Council.Type"]);
+      values$barPlotHeight <- values$typeCount * 25;
+      region.id <- authority.regions.df$FID[match(sub(" Council$","",input$council),
+                                                  authority.regions.df$TA2016_NAME)];
+      values$councilJSON <-
+        scan(paste(sep="&","https://datafinder.stats.govt.nz/services;key=0b76d98b83fa4e0dab5c295f760826b9/wfs?service=WFS",
+                   "request=getFeature",
+                   "typeNames=layer-8409",
+                   "outputFormat=application/json",
+                   paste0("featureId=",region.id),
+                   "count=1"),
+             sep="\n", what=character(), quiet = TRUE);
+      leafletProxy("nzMap") %>% clearGeoJSON() %>%
+        addGeoJSON(input$baseMap, geojson = values$councilJSON);
+    }
   });
   
   });
