@@ -3,6 +3,40 @@
 
 library(shiny);
 library(tidyr);
+library(digest);
+
+logOutput <- function(input, requestID){
+  if(!file.exists("../../logs")){
+    return();
+  }
+  ## Don't destroy the App just because logging fails
+  tryCatch({
+    timeStr <- as.character(Sys.time());
+    if(!file.exists("../../logs/usageusagelog.csv")){
+      ## add file header (append=TRUE for the rare case of race conditions)
+      cat("requestID,time,inputCategory,value\n",
+          file = "../../logs/usageusagelog.csv", append=TRUE);
+    }
+    # for(n in names(input)){
+    #   if(is.character(input[[n]]) || (is.numeric(input[[n]]) && (length(input[[n]]) == 1))){
+    #     cat(file = "../../logs/usageusagelog.csv",
+    #         append=TRUE, sprintf("%s,%s,\"%s\",\"%s\"\n",
+    #                              requestID, timeStr, n,
+    #                              substring(paste(input[[n]], collapse=";"),1,100)));
+    #   }
+    # }
+    cat(file = "../../logs/usageusagelog.csv",
+        append=TRUE, sprintf("%s,%s,\"%s\",\"%s\"\n",
+                             requestID, timeStr, "Access",1));
+  }, error=function(cond){
+    cat("Error:\n");
+    #message(cond);
+  }, warning=function(cond){
+    cat("Warning:\n");
+    #message(cond);
+  });
+}
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -38,5 +72,9 @@ shinyServer(function(input, output) {
     barplot(dwellCount, xlab = "Graphs viewed per visit",
             ylab = "Number of visits");
   })
-  
+
+  ## record the data request in a log file
+  requestID <- substr(digest(Sys.time()),1,8);
+  logOutput(input, requestID = requestID);
+    
 })
