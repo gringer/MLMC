@@ -10,9 +10,11 @@ shinyServer(function(input, output) {
   data.df <- read.csv("../../logs/accesslog.csv");
   data.df$time <- as.POSIXct(data.df$time);
   data.wide.df <- spread(data = data.df, key = "inputCategory", value="value");
+  data.wide.df$hours <- round(data.wide.df$time, "hours");
 
   output$distPlot <- renderPlot({
-    plot(tapply(data.wide.df$time, round(data.wide.df$time, "hours"),length));
+    htable <- table(as.character(round(data.wide.df$hours,"hours")));
+    plot(htable);
   })
   
 })
