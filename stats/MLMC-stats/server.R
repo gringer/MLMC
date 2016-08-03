@@ -14,7 +14,8 @@ shinyServer(function(input, output) {
 
   output$distPlot <- renderPlot({
     htable <- table(as.character(round(data.wide.df$hours,"hours")));
-    plot(x=as.POSIXct(names(htable)), y=htable, ylab = "number of uses");
+    plot(x=as.POSIXct(names(htable)), y=htable, xlab="Time", ylab = "Number of uses", yaxt="n");
+    axis(2);
   })
   
 })
