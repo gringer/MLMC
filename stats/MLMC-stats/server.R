@@ -43,14 +43,21 @@ shinyServer(function(input, output) {
   
   data.df <- read.csv("../../logs/accesslog.csv", stringsAsFactors=FALSE);
   data.df$time <- as.POSIXct(data.df$time);
+  usage.df <- read.csv("../../logs/usageusagelog.csv", stringsAsFactors=FALSE);
+  usage.df$time <- as.POSIXct(usage.df$time);
   data.wide.df <- spread(data = data.df, key = "inputCategory", value="value");
   data.wide.df$hours <- round(data.wide.df$time, "hours");
   data.wide.df$viewButton <- as.numeric(data.wide.df$viewButton);
 
   output$timePlot <- renderPlot({
-    htable <- table(as.character(round(data.wide.df$hours,"hours")));
+    htable <- table(as.character(data.wide.df$hours));
+    hutable <- table(as.character(round(usage.df$time,"hours")));
     plot(x=as.POSIXct(names(htable)), y=htable, xlab="Time",
-         ylab = "Number of uses", yaxt="n", type="b");
+         ylab = "Number of visits", yaxt="n", type="b", pch=16, col="blue");
+    points(x=as.POSIXct(names(hutable)), y=hutable, type="b",
+           pch=17, col="darkgreen");
+    legend("topright",legend=c("MLMC App","Usage App"), pch=c(16,17), 
+           col=c("blue", "darkgreen"), inset=0.05, bg="#FFFFFFC0");
     axis(2);
   });
 
