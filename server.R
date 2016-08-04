@@ -257,9 +257,11 @@ shinyServer(function(input, output, session) {
   ## Observers to detect button changes and switch tabs
   ## view button
   observeEvent(input$viewButton,{
-    updateTabsetPanel(session, "tabPanel", selected = "view");
-    ## record the data request in a log file
-    logOutput(input, requestID = requestID);
+    if((input$council != "") && (input$council %in% councilNames)){ # council must be selected in order to view
+      updateTabsetPanel(session, "tabPanel", selected = "view");
+      ## record the data request in a log file
+      logOutput(input, requestID = requestID);
+    }
   });
   
   ## select / back button and logo
