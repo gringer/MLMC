@@ -5,7 +5,6 @@ library(shiny);
 library(digest);
 library(rmarkdown);
 library(leaflet);
-library(bedr);
 library(data.table);
 
 options(stringsAsFactors = FALSE);
@@ -282,13 +281,15 @@ shinyServer(function(input, output, session) {
                 args=c("data/sorted_nz-street-address-beta-NLonly.csv.gz",
                        ifelse(is.na(streetNumber),streetPrefix,sprintf("%s:%d-%d",streetPrefix, streetNumber,(streetNumber+1)))));
     if((length(addr.res) == 0) || (nchar(addr.res) == 0)){
-      addressText <- sub("-- not found","",addressText);
+      addressText <- sub("-- (Council )?not found","",addressText);
       updateSelectizeInput(session, "council", server=TRUE, choices = c(sprintf("%s -- not found", addressText),councilNames),
                            selected=ifelse(nrow(values$addr)==1,values$addr$fullAddress,""));
       return();
     }
     addr.df <- unique(data.frame(tstrsplit(sub("^.*\t","",addr.res),";", type.convert = TRUE), stringsAsFactors = FALSE));
     colnames(addr.df) <- c("fullAddress","long","lat");
+    ## filter on actual query
+    addr.df <- addr.df[grepl(addressText, addr.df$fullAddress, ignore.case=TRUE),];
     ## filter out duplicate addresses (e.g. 299 Waitao Road)
     matchRows <- match(unique(addr.df$fullAddress),addr.df$fullAddress);
     addr.df <- addr.df[match(unique(addr.df$fullAddress),addr.df$fullAddress),];
@@ -322,6 +323,12 @@ shinyServer(function(input, output, session) {
                    URLencode(sprintf("CQL_FILTER=CONTAINS(GEOMETRY, POINT(%f %f))", lat, long)),
                    "propertyname=TA2016_NAME");
       council.df <- read.csv(req, stringsAsFactors = FALSE);
+      if(nrow(council.df) == 0){
+        addressText <- sub("-- Council not found","",isolate(input$council));
+        updateSelectizeInput(session, "council", server=TRUE, choices = c(sprintf("%s -- Council not found", addressText),councilNames),
+                             selected=ifelse(nrow(values$addr)==1,values$addr$fullAddress,""));
+        return();
+      }
       council.df$TAName <- paste0(council.df$TA2016_NAME," Council");
       if(council.df$TAName %in% rownames(type.df)){
         updateSelectizeInput(session, "council", server=TRUE, choices = councilNames, selected=council.df$TAName, label=NULL);
