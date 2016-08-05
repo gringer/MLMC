@@ -5,6 +5,8 @@ library(shiny);
 library(digest);
 library(rmarkdown);
 library(leaflet);
+library(bedr);
+library(data.table);
 
 options(stringsAsFactors = FALSE);
 core.df <- read.csv("data/Local_Authority_Financial_Statistics_Year_ended_June_2015_EXPENDITURE_TABLE.csv");
@@ -114,7 +116,7 @@ basicPDF <- function(input, con){
 shinyServer(function(input, output, session) {
   
   requestID <- substr(digest(Sys.time()),1,8);
-  
+
   output$viewTopBlurb <- renderUI({
     list("My council is ",tags$b(input$council),
          ", I'm interested in ", tags$b(input$cat),
@@ -269,41 +271,60 @@ shinyServer(function(input, output, session) {
     updateTabsetPanel(session, "tabPanel", selected = "select");
   });
   
+  ## address searching
+  searchAddress <- function(addressText){
+    streetPrefix <- toupper(substr(gsub(" ","",sub("^[^0-9]*[0-9]+[^0-9]*? ","",addressText)),1,5));
+    if(nchar(streetPrefix) < 5){
+      return();
+    }
+    streetNumber <- ifelse(grepl("[0-9]",addressText), as.numeric(sub("^.*?([0-9]+).*$","\\1",addressText)), NA);
+    addr.res <- system2("tabix", stdout=TRUE,
+                args=c("data/sorted_nz-street-address-beta-NLonly.csv.gz",
+                       ifelse(is.na(streetNumber),streetPrefix,sprintf("%s:%d-%d",streetPrefix, streetNumber,(streetNumber+1)))));
+    if((length(addr.res) == 0) || (nchar(addr.res) == 0)){
+      addressText <- sub("-- not found","",addressText);
+      updateSelectizeInput(session, "council", server=TRUE, choices = c(sprintf("%s -- not found", addressText),councilNames),
+                           selected=ifelse(nrow(values$addr)==1,values$addr$fullAddress,""));
+      return();
+    }
+    addr.df <- unique(data.frame(tstrsplit(sub("^.*\t","",addr.res),";", type.convert = TRUE), stringsAsFactors = FALSE));
+    colnames(addr.df) <- c("fullAddress","long","lat");
+    ## filter out duplicate addresses (e.g. 299 Waitao Road)
+    matchRows <- match(unique(addr.df$fullAddress),addr.df$fullAddress);
+    addr.df <- addr.df[match(unique(addr.df$fullAddress),addr.df$fullAddress),];
+    rownames(addr.df) <- addr.df$fullAddress;
+    values$addr <- addr.df;
+    updateSelectizeInput(session, "council", server=TRUE, choices = c(values$addr$fullAddress,councilNames),
+                         selected=ifelse(nrow(values$addr)==1,values$addr$fullAddress,""));
+  }
+  
   ## Change bar plot height on council type change
   ## Change displayed region on council type change
   observeEvent(input$council,{
     if(!(input$council %in% councilNames)){
-      if(nchar(input$council) > 5){
-        searchName <- isolate(input$council);
-        cat(sprintf("Searching for '%s'...", searchName));
-        ## find address latitude/longitude
-        req <- paste(sep="&","http://data.linz.govt.nz/services;key=cbcae793850342e8be9908602a1e60a8/wfs?service=WFS",
-                     "request=getFeature",
-                     "outputFormat=csv",
-                     "typeName=layer-3353",
-                     "count=5",
-                     URLencode(sprintf("CQL_FILTER=full_address ILIKE '%s%%'", searchName)),
-                     "propertyname=full_address,gd2000_xcoord,gd2000_ycoord");
-        addr.df <- read.csv(req, stringsAsFactors = FALSE);
-        cat(" done\n");
-        if(nrow(addr.df) == 1){
-          leafletProxy("nzMap") %>% clearMarkers() %>%
-            addMarkers(addr.df$gd2000_xcoord,addr.df$gd2000_ycoord,popup=addr.df$full_address) %>%
-            setView(addr.df$gd2000_xcoord, addr.df$gd2000_ycoord, zoom=17);
-          ## identify intersecting territorial authority
-          req <- paste(sep="&","https://datafinder.stats.govt.nz/services;key=0b76d98b83fa4e0dab5c295f760826b9/wfs?service=WFS",
-                       "request=getFeature",
-                       "typeNames=layer-8409",
-                       "outputFormat=csv",
-                       "count=5",
-                       URLencode(sprintf("CQL_FILTER=CONTAINS(GEOMETRY, POINT(%f %f))",addr.df$gd2000_ycoord, addr.df$gd2000_xcoord)),
-                       "propertyname=TA2016_NAME");
-          council.df <- read.csv(req, stringsAsFactors = FALSE);
-          council.df$TAName <- paste0(council.df$TA2016_NAME," Council");
-          if(council.df$TAName %in% rownames(type.df)){
-            updateSelectizeInput(session, "council", choices = councilNames, selected=council.df$TAName, label=NULL);
-          }
-        }
+      if((is.null(values$addr)) || (!input$council %in% values$addr$fullAddress)){
+        searchAddress(input$council);
+        return();
+      }
+      ## address seems valid...
+      fullAddr <- input$council;
+      lat <- values$addr[fullAddr, "lat"];
+      long <- values$addr[fullAddr, "long"];
+      leafletProxy("nzMap") %>% clearMarkers() %>%
+        addMarkers(long,lat,popup=fullAddr) %>%
+        setView(long, lat, zoom=10);
+      ## identify intersecting territorial authority
+      req <- paste(sep="&","https://datafinder.stats.govt.nz/services;key=0b76d98b83fa4e0dab5c295f760826b9/wfs?service=WFS",
+                   "request=getFeature",
+                   "typeNames=layer-8409",
+                   "outputFormat=csv",
+                   "count=5",
+                   URLencode(sprintf("CQL_FILTER=CONTAINS(GEOMETRY, POINT(%f %f))", lat, long)),
+                   "propertyname=TA2016_NAME");
+      council.df <- read.csv(req, stringsAsFactors = FALSE);
+      council.df$TAName <- paste0(council.df$TA2016_NAME," Council");
+      if(council.df$TAName %in% rownames(type.df)){
+        updateSelectizeInput(session, "council", server=TRUE, choices = councilNames, selected=council.df$TAName, label=NULL);
       }
     } else {
       values$typeCount <- sum(type.df$Council.Type == type.df[input$council,"Council.Type"]);

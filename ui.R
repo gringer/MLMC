@@ -47,8 +47,13 @@ shinyUI(
                                          "to you."),
                                   fluidRow(
                                     column(4,"My council is:"),
-                                    column(8,selectizeInput("council", label="Enter address or select", options=list(create=TRUE),
-                                                         choices=c("",councilNames)))
+                                    column(8,selectizeInput("council", label=NULL,
+                                                         choices=c("Enter Address or Choose" = "",councilNames),
+                                                         options=list(create=TRUE, addPrecedence=TRUE, render=I("{
+                                                           option_create: function(data, escape) {
+                                                             return '<div class=\"create\">Search for &quot;<strong>' + escape(data.input) + '</strong>&quot;&hellip;</div>';
+                                                           }
+                                                         }"))))
                                   ),
                                   fluidRow(
                                     column(4,"I'm interested in:"),
@@ -70,12 +75,19 @@ shinyUI(
                          tags$br(),
                          tags$br(),
                          fluidRow(
-                           column(9,tags$p("Description: Information used in this website is from the Local Authority 
-                                            Financial Statistics (LAFS) 30 June 2015 data set provided by ",
-                                            tags$a(href="http://www.stats.govt.nz/tools_and_services/releases_csv_files/csv-files-for-infoshare.aspx","Statistics New Zealand"),
+                           column(9,tags$p("Description: Information used in this website is from the Local Authority",
+                                            "Financial Statistics (LAFS) 30 June 2015 data set provided by ",
+                                            tags$a(href="http://www.stats.govt.nz/tools_and_services/releases_csv_files/csv-files-for-infoshare.aspx",
+                                                   "Statistics New Zealand"),
                                             ", and information on Council by Type and Council Contact Details held by the ",
-                                           tags$a(href="http://www.localcouncils.govt.nz/","Department of Internal Affairs"),".
-                                          All information is licensed for re-use under the Creative Commons Attribution 4.0 International licence.", id="smallerfont"))
+                                           tags$a(href="http://www.localcouncils.govt.nz/","Department of Internal Affairs"),
+                                           ". Address lookup is based on data from",
+                                           tags$a(href="https://data.linz.govt.nz/layer/3353-nz-street-address-beta/",
+                                                   "LINZ"),"and",
+                                           tags$a(href="https://datafinder.stats.govt.nz/layer/8409-territorial-authority-2016-generalised-version/",
+                                                  "Statistics New Zealand"),
+                                           "All information is licensed for re-use under the Creative Commons Attribution",
+                                           " 4.0 International licence.", id="smallerfont"))
                          )
                 ),
                 ### View panel ###
