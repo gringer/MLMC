@@ -5,7 +5,7 @@ library(shiny);
 library(digest);
 library(rmarkdown);
 library(leaflet);
-library(data.table);
+library(data.table, quietly=TRUE);
 
 options(stringsAsFactors = FALSE);
 core.df <- read.csv("data/Local_Authority_Financial_Statistics_Year_ended_June_2015_EXPENDITURE_TABLE.csv");
