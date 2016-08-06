@@ -314,6 +314,9 @@ shinyServer(function(input, output, session) {
       leafletProxy("nzMap") %>% clearMarkers() %>%
         addMarkers(long,lat,popup=fullAddr) %>%
         setView(long, lat, zoom=10);
+      if(long > 180){ # fix for Chatham Islands
+        long = long-360;
+      };
       ## identify intersecting territorial authority
       req <- paste(sep="&","https://datafinder.stats.govt.nz/services;key=0b76d98b83fa4e0dab5c295f760826b9/wfs?service=WFS",
                    "request=getFeature",
@@ -332,6 +335,11 @@ shinyServer(function(input, output, session) {
       council.df$TAName <- paste0(council.df$TA2016_NAME," Council");
       if(council.df$TAName %in% rownames(type.df)){
         updateSelectizeInput(session, "council", server=TRUE, choices = councilNames, selected=council.df$TAName, label=NULL);
+      } else {
+        council.df$TAName <- paste0(sub(" Territory$"," Council",council.df$TA2016_NAME));
+        if(council.df$TAName %in% rownames(type.df)){
+          updateSelectizeInput(session, "council", server=TRUE, choices = councilNames, selected=council.df$TAName, label=NULL);
+        }
       }
     } else {
       values$typeCount <- sum(type.df$Council.Type == type.df[input$council,"Council.Type"]);

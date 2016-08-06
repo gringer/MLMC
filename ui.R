@@ -2,7 +2,7 @@
 ## - User interface -
 
 library(shiny);
-library(shinyjs);
+library(shinyjs, quietly = TRUE);
 library(leaflet);
 
 options(stringsAsFactors = FALSE);
