@@ -284,14 +284,14 @@ shinyServer(function(input, output, session) {
                                     "MLMC team haven't yet linked into your council's feedback form.");
     } else {
       councilEmail <- contacts.df[input$council,"Email"];
-      sendmail("\"My Life, My Council\" <govhack@mlmc.gringene.org>",
-               to=paste0("\"",input$council,";",councilEmail,"\" <mlmctest@gringene.org>"),
-               subject="My Life, My Council Feedback [MLMC]",
+      sendmail("\"My Life, My Council\" <noreply@mlmc.gringene.org>",
+               to=paste0("\"",input$council,"\" <",councilEmail,">"),
+               subject=paste0(input$council," Feedback [MLMC]"),
                cc="mlmc@actrix.co.nz",
-               msg=paste0(input$councilFeedback,"\n------\n",
-                          "This message was generated using the comment submission form ",
-                          "from 'My Life, My Council'. For more information, ",
-                          "see http://mlmc.gringene.org"));
+               msg=paste0(input$councilFeedback,"\n\n------\n",
+                          "This message was generated using the comment submission form\n",
+                          "from 'My Life, My Council'.\n",
+                          "For more information, see http://mlmc.gringene.org"));
       values$dialogMessage <- paste0("Thanks for your feedback. An email containing your message ",
                                      "has been sent to your council, ",
                                      input$council," <",councilEmail,">.");
