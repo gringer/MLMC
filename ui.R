@@ -124,11 +124,20 @@ shinyUI(
                                                    plotOutput("yearPlot", height="400px", width="80%"),
                                                    tags$br(),
                                                    tags$p(tags$b("Description:")," The graph shows how much your council is spending on an activity over time.
-                                                          It's measured as a percentage of total operating expenditure.")),
-                                  uiOutput("dataCaveats"),
-                                  tags$h3("Contact Details"),
-                                  uiOutput("contactDetails",inline=TRUE)
-                         )
+                                                          It's measured as a percentage of total operating expenditure."))
+                         ),
+                         uiOutput("dataCaveats"),
+                         tags$h3("Contact Details"),
+                         uiOutput("contactDetails",inline=TRUE),
+                         tags$br(),
+                         fluidRow(
+                           column(9,tags$textarea(id="councilFeedback", class="form-control", 
+                                                  width="100%", rows=4, label = NULL,
+                                              placeholder = "Anything you would like to tell your council?")),
+                           column(3,actionButton("feedbackButton",label = "Submit comment\nto my council"))),
+                         conditionalPanel(condition="values.dialogMessage != ''",
+                                          tags$br(),
+                                          uiOutput("dialogMessage"))
                 ) # closes "view" tabPanel
              ), # closes tabSetPanel
              tags$br(),

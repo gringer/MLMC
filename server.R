@@ -5,6 +5,7 @@ library(shiny);
 library(digest);
 library(rmarkdown);
 library(leaflet);
+library(sendmailR);
 library(data.table, quietly=TRUE);
 
 options(stringsAsFactors = FALSE);
@@ -122,6 +123,10 @@ shinyServer(function(input, output, session) {
          "and I want to ", tags$b(typeFull[input$dataType]));
   });
   
+  output$dialogMessage <- renderUI({
+    tags$div(style="color: red", values$dialogMessage);
+  });
+
   output$plotHeading <- renderUI({
     councilType <- type.df[input$council,"Council.Type"];
     fluidRow(
@@ -268,6 +273,29 @@ shinyServer(function(input, output, session) {
   ## select / back button and logo
   observeEvent(input$backButton+input$logoLink,{
     updateTabsetPanel(session, "tabPanel", selected = "select");
+  });
+  
+  ## "comment button"
+  observeEvent(input$feedbackButton,{
+    if(input$councilFeedback == ""){
+      values$dialogMessage <- "Nothing to submit. Did you mean to write a comment?";
+    } else if (!grepl("@",contacts.df[input$council,"Email"])){
+      values$dialogMessage <- paste0("Sorry, your council has no registered email address, and the ",
+                                    "MLMC team haven't yet linked into your council's feedback form.");
+    } else {
+      councilEmail <- contacts.df[input$council,"Email"];
+      sendmail("\"My Life, My Council\" <govhack@mlmc.gringene.org>",
+               to=paste0("\"",input$council,";",councilEmail,"\" <mlmctest@gringene.org>"),
+               subject="My Life, My Council Feedback [MLMC]",
+               cc="mlmc@actrix.co.nz",
+               msg=paste0(input$councilFeedback,"\n------\n",
+                          "This message was generated using the comment submission form ",
+                          "from 'My Life, My Council'. For more information, ",
+                          "see http://mlmc.gringene.org"));
+      values$dialogMessage <- paste0("Thanks for your feedback. An email containing your message ",
+                                     "has been sent to your council, ",
+                                     input$council," <",councilEmail,">.");
+    }
   });
   
   ## address searching
