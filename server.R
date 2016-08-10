@@ -295,6 +295,8 @@ shinyServer(function(input, output, session) {
       values$dialogMessage <- paste0("Thanks for your feedback. An email containing your message ",
                                      "has been sent to your council, ",
                                      input$council," <",councilEmail,">.");
+      ## record the feedback attempt in a log file
+      logOutput(input, requestID = requestID);
     }
   });
   
