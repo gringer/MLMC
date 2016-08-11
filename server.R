@@ -290,8 +290,8 @@ shinyServer(function(input, output, session) {
                cc="mlmc@actrix.co.nz",
                msg=paste0(input$councilFeedback,"\n\n------\n",
                           "This message was generated using the comment submission form\n",
-                          "from 'My Life, My Council'.\n",
-                          "For more information, see http://mlmc.gringene.org"));
+                          "from 'My Life, My Council' [http://mlmc.gringene.org].\n",
+                          "Email <govhack@mlmc.gringene.org> for more information"));
       values$dialogMessage <- paste0("Thanks for your feedback. An email containing your message ",
                                      "has been sent to your council, ",
                                      input$council," <",councilEmail,">.");
