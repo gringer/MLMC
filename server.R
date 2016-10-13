@@ -166,13 +166,23 @@ shinyServer(function(input, output, session) {
   });
   
   output$yearPlot <- renderPlot({
-    data.sub.df <- subset(core.df, (Council == input$council) & (Activity == input$cat));
-    data.sub.df$pct.exp <- signif(data.sub.df$opex.1000 /
-                                   total.exp[cbind(data.sub.df$Council,as.character(data.sub.df$Year))] * 100,2);
-    dataMax <- max(data.sub.df$pct.exp);
-    plot(data.sub.df$Year, data.sub.df$pct.exp, ylim=c(0,dataMax),
-         ylab=sprintf("Percent Expenditure"),
-         xlab="Year", type="b", lwd=2, col="darkgreen");
+    data.largesub.df <- subset(core.df, (Council == input$council));
+    data.largesub.df$pct.exp <- signif(data.largesub.df$opex.1000 /
+                                    total.exp[cbind(data.largesub.df$Council,as.character(data.largesub.df$Year))] * 100,2);
+    dataMax <- max(data.largesub.df$pct.exp);
+    yearRange <- range(data.largesub.df$Year);
+    plot(NA, ylim=c(0,dataMax), xlim = yearRange,
+         ylab=sprintf("Percent Expenditure"), xlab="Year");
+    for(act in unique(data.largesub.df$Activity)){
+      data.sub.df <- subset(data.largesub.df, (Activity == act));
+      if(act != input$cat){
+        points(data.sub.df$Year, data.sub.df$pct.exp,
+               type="l", lwd=2, col="lightgrey");
+      }
+    }
+    data.sub.df <- subset(data.largesub.df, (Activity == input$cat));
+    points(data.sub.df$Year, data.sub.df$pct.exp,
+           type="b", lwd=3, col="darkgreen");
   });
   
   output$plotScaleBar <- renderPlot({
