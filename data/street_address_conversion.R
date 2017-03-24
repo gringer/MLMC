@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
 
-data.df <- read.csv("nz-street-address-beta.csv.gz", stringsAsFactors=FALSE,
+data.df <- read.csv("nz-street-address.csv.gz", stringsAsFactors=FALSE,
                     nrows = 2*10^6);
 
 sub.df <- data.df[,c("full_road_name", "address_number",
@@ -14,5 +14,5 @@ sub.df <- sub.df[order(sub.df$roadIndex,
                        sub.df$full_address),];
 
 write.table(sub.df[,c("roadIndex", "address_number", "address_number", "addressDetail")],
-            sep="\t", file="nz-street-address-beta-NLonly.csv",
+            sep="\t", file="nz-street-address-NLonly.csv",
             row.names=FALSE, col.names=FALSE, quote=FALSE);
